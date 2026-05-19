@@ -1,4 +1,4 @@
-import { GiCompass, GiCrenelCrown, GiTrophy, GiScrollUnfurled, GiTreasureMap } from 'react-icons/gi'
+import { GiCompass, GiCrenelCrown, GiTrophy, GiScrollUnfurled } from 'react-icons/gi'
 import type { IconType } from 'react-icons'
 import { useGameStore, ALL_STEPS, ACTS, ZONE_MAP, getZoneInfo } from '../store/gameStore'
 
@@ -10,7 +10,7 @@ const QUEST_ICON: Record<string, IconType> = {
 }
 
 export default function ZoneBanner() {
-  const { currentZoneName, currentStepIndex, openLayoutModal } = useGameStore()
+  const { currentZoneName, currentStepIndex } = useGameStore()
   const step = ALL_STEPS[currentStepIndex]
   const displayZone = currentZoneName || step?.zone || '—'
   const questName = step?.questName
@@ -34,8 +34,6 @@ export default function ZoneBanner() {
           : `Lv ${zoneInfo.normalLevel}`)
       : null
 
-  const hasLayouts = zoneInfo.layouts.length > 0
-
   return (
     <div className="zone-banner drag-region">
       <div className="zone-banner-top">
@@ -43,17 +41,6 @@ export default function ZoneBanner() {
         {!isHub && actLabel && <span className="act-badge">{actLabel}</span>}
         <span className="zone-name">{displayZone}</span>
         {levelLabel && <span className="level-badge" title="Recommended level (normal/cruel)">{levelLabel}</span>}
-        {hasLayouts && (
-          <button
-            className="zone-banner-map-btn no-drag"
-            onClick={() => openLayoutModal(zoneInfo.layouts[0])}
-            title={`View zone layouts (${zoneInfo.layouts.length}) — use ← → to cycle`}
-            aria-label="View zone layouts"
-          >
-            <GiTreasureMap size={15} />
-            <span className="zone-banner-map-count">{zoneInfo.layouts.length}</span>
-          </button>
-        )}
       </div>
       {questName && (
         <div className="quest-label">

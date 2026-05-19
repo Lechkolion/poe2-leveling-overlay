@@ -9,6 +9,7 @@ import MiniMapHint from './components/MiniMapHint'
 import Settings from './components/Settings'
 import HotkeyBar from './components/HotkeyBar'
 import LayoutModal from './components/LayoutModal'
+import LayoutSidebar from './components/LayoutSidebar'
 
 export default function App() {
   const {
@@ -92,6 +93,7 @@ export default function App() {
         )}
       </div>
       <HotkeyBar />
+      <LayoutSidebar />
       <LayoutModal />
     </div>
   )

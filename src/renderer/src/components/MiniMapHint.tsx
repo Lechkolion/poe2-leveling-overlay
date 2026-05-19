@@ -1,9 +1,9 @@
 import {
   GiPathDistance, GiAncientRuins, GiPathTile, GiCobweb, GiSpiralShell, GiTombstone,
-  GiExpand, GiContract, GiBullseye, GiExitDoor, GiAncientColumns,
+  GiExpand, GiContract, GiBullseye, GiExitDoor,
 } from 'react-icons/gi'
 import type { IconType } from 'react-icons'
-import { useGameStore, ALL_STEPS, ZONE_STEP_MAP, getZoneInfo } from '../store/gameStore'
+import { useGameStore, ALL_STEPS, ZONE_STEP_MAP } from '../store/gameStore'
 
 const LAYOUT_ICON: Record<string, IconType> = {
   linear:    GiPathDistance,
@@ -24,7 +24,7 @@ const LAYOUT_LABEL: Record<string, string> = {
 }
 
 export default function MiniMapHint() {
-  const { currentStepIndex, currentZoneName, showMiniMap, toggleMiniMap, openLayoutModal } = useGameStore()
+  const { currentStepIndex, currentZoneName, showMiniMap, toggleMiniMap } = useGameStore()
   const step = ALL_STEPS[currentStepIndex]
   const zoneName = currentZoneName || step?.zone
 
@@ -40,15 +40,11 @@ export default function MiniMapHint() {
     }
   }
 
-  // Exile-UI layouts for this zone (from Lailloken/Exile-UI, MIT)
-  const zoneInfo = getZoneInfo(zoneName)
-  const hasLayouts = zoneInfo.layouts.length > 0
+  if (!hint) return null
 
-  if (!hint && !hasLayouts) return null
-
-  const layoutType = hint?.layoutType ?? 'open'
+  const layoutType = hint.layoutType
   const LayoutIcon = LAYOUT_ICON[layoutType] ?? GiTombstone
-  const label = hint ? (LAYOUT_LABEL[layoutType] ?? layoutType) : 'Layouts'
+  const label = LAYOUT_LABEL[layoutType] ?? layoutType
 
   return (
     <div className="minimap-section">
@@ -63,21 +59,17 @@ export default function MiniMapHint() {
 
       {showMiniMap && (
         <div className="minimap-body">
-          {hint?.objectiveHint && (
-            <div className="minimap-row">
-              <GiBullseye className="minimap-row-icon" size={12} />
-              <span className="minimap-label">Objective</span>
-              <span className="minimap-value">{hint.objectiveHint}</span>
-            </div>
-          )}
-          {hint?.exitHint && (
-            <div className="minimap-row">
-              <GiExitDoor className="minimap-row-icon" size={12} />
-              <span className="minimap-label">Exit</span>
-              <span className="minimap-value">{hint.exitHint}</span>
-            </div>
-          )}
-          {hint?.tips && hint.tips.length > 0 && (
+          <div className="minimap-row">
+            <GiBullseye className="minimap-row-icon" size={12} />
+            <span className="minimap-label">Objective</span>
+            <span className="minimap-value">{hint.objectiveHint}</span>
+          </div>
+          <div className="minimap-row">
+            <GiExitDoor className="minimap-row-icon" size={12} />
+            <span className="minimap-label">Exit</span>
+            <span className="minimap-value">{hint.exitHint}</span>
+          </div>
+          {hint.tips && hint.tips.length > 0 && (
             <div className="minimap-tips">
               {hint.tips.map((tip, i) => (
                 <div key={i} className="minimap-tip">
@@ -85,36 +77,6 @@ export default function MiniMapHint() {
                   <span>{tip}</span>
                 </div>
               ))}
-            </div>
-          )}
-
-          {hasLayouts && (
-            <div className="layout-gallery">
-              <div className="layout-gallery-header">
-                <GiAncientColumns size={11} />
-                <span>POSSIBLE LAYOUTS</span>
-                <span className="layout-gallery-count">({zoneInfo.layouts.length})</span>
-                <span className="layout-gallery-credit">via Exile-UI</span>
-              </div>
-              <div className="layout-gallery-strip">
-                {zoneInfo.layouts.map((file) => (
-                  <button
-                    key={file}
-                    className="layout-thumb"
-                    onClick={() => openLayoutModal(file)}
-                    title={`Click to enlarge — variant: ${file.replace(/\.jpg$/, '')}`}
-                  >
-                    <img
-                      src={zoneInfo.layoutBaseUrl + encodeURIComponent(file)}
-                      alt={file}
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.currentTarget.parentElement as HTMLElement | null)?.style.setProperty('display', 'none')
-                      }}
-                    />
-                  </button>
-                ))}
-              </div>
             </div>
           )}
         </div>

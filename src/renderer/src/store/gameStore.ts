@@ -25,6 +25,7 @@ interface GameState {
   showMiniMap: boolean
   showQuestBrowser: boolean
   layoutModalFile: string | null
+  layoutSidebarFile: string | null  // null = sidebar closed
 }
 
 interface GameActions {
@@ -46,6 +47,10 @@ interface GameActions {
   resetProgress: () => void
   openLayoutModal: (file: string) => void
   closeLayoutModal: () => void
+  toggleLayoutSidebar: () => void
+  openLayoutSidebar: (file?: string) => void
+  closeLayoutSidebar: () => void
+  setLayoutSidebarFile: (file: string) => void
 }
 
 type GameStore = GameState & GameActions
@@ -90,6 +95,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   showMiniMap: true,
   showQuestBrowser: false,
   layoutModalFile: null,
+  layoutSidebarFile: null,
 
   onZoneChange: (zoneName: string) => {
     set({ currentZoneName: zoneName })
@@ -199,6 +205,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
   toggleQuestBrowser: () => set(state => ({ showQuestBrowser: !state.showQuestBrowser, showSettings: false })),
   openLayoutModal: (file: string) => set({ layoutModalFile: file }),
   closeLayoutModal: () => set({ layoutModalFile: null }),
+  toggleLayoutSidebar: () => set(state => ({ layoutSidebarFile: state.layoutSidebarFile !== null ? null : '__open__' })),
+  openLayoutSidebar: (file?: string) => set({ layoutSidebarFile: file ?? '__open__' }),
+  closeLayoutSidebar: () => set({ layoutSidebarFile: null }),
+  setLayoutSidebarFile: (file: string) => set({ layoutSidebarFile: file }),
 
   resetProgress: () => {
     localStorage.removeItem(STORAGE_KEY)
