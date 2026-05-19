@@ -79,6 +79,13 @@ function setupIPC(): void {
     mainWindow?.setIgnoreMouseEvents(ignore, { forward: true })
   })
 
+  // Renderer requests opening an external URL in the system browser
+  ipcMain.on('open-external', (_, url: string) => {
+    if (typeof url !== 'string') return
+    if (!url.startsWith('http://') && !url.startsWith('https://')) return
+    shell.openExternal(url)
+  })
+
   // Renderer reports content height change
   ipcMain.on('resize-window', (_, height: number) => {
     if (mainWindow) {

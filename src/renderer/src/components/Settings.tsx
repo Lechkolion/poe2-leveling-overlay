@@ -164,10 +164,16 @@ export default function Settings() {
       <div className="settings-section">
         <div className="settings-title">Credits</div>
         <div className="settings-hint">
-          Icons by <a href="https://game-icons.net" target="_blank" rel="noreferrer">game-icons.net</a> (CC BY 3.0).
+          Icons by <a
+            href="https://game-icons.net"
+            onClick={(e) => { e.preventDefault(); window.api?.openExternal('https://game-icons.net') }}
+          >game-icons.net</a> (CC BY 3.0).
         </div>
         <div className="settings-hint">
-          Zone layouts + level data via <a href="https://github.com/Lailloken/Exile-UI" target="_blank" rel="noreferrer">Lailloken/Exile-UI</a> (MIT).
+          Zone layouts + level data via <a
+            href="https://github.com/Lailloken/Exile-UI"
+            onClick={(e) => { e.preventDefault(); window.api?.openExternal('https://github.com/Lailloken/Exile-UI') }}
+          >Lailloken/Exile-UI</a> (MIT).
         </div>
       </div>
     </div>

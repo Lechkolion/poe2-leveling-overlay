@@ -5,6 +5,9 @@ const api = {
   // Overlay mouse passthrough control
   setIgnoreMouse: (ignore: boolean) => ipcRenderer.send('set-ignore-mouse', ignore),
 
+  // Open external URLs in system browser
+  openExternal: (url: string) => ipcRenderer.send('open-external', url),
+
   // Window sizing
   resizeWindow: (height: number) => ipcRenderer.send('resize-window', height),
 

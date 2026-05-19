@@ -10,12 +10,17 @@ export default function LayoutModal() {
   const currentIdx = layoutModalFile ? layouts.indexOf(layoutModalFile) : -1
   const total = layouts.length
 
+  // If zone changed mid-modal so the open file is no longer in the layout list, close it.
+  useEffect(() => {
+    if (layoutModalFile && currentIdx === -1) closeLayoutModal()
+  }, [layoutModalFile, currentIdx, closeLayoutModal])
+
   // Keyboard nav: Esc closes, arrow keys cycle
   useEffect(() => {
     if (!layoutModalFile) return
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { closeLayoutModal(); return }
-      if (total < 2) return
+      if (total < 2 || currentIdx < 0) return
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         const next = (currentIdx + 1) % total
         openLayoutModal(layouts[next])

@@ -1,4 +1,4 @@
-$root        = "C:\Users\LIONHEART\Documents\Lionheart Docs (Vlad)\Bots\POE 2 Leveling"
+$root        = $PSScriptRoot
 $electronSrc = "$root\node_modules\electron\dist"
 $unpacked    = "$root\app"
 $appRes      = "$unpacked\resources\app"

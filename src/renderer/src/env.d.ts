@@ -3,6 +3,7 @@
 interface Window {
   api: {
     setIgnoreMouse: (ignore: boolean) => void
+    openExternal: (url: string) => void
     resizeWindow: (height: number) => void
     setLogPath: (path: string) => void
     getLogPath: () => Promise<string | null>
