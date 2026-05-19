@@ -645,21 +645,22 @@ html, body {
 .app-frame {
   display: flex;
   align-items: stretch;
+  justify-content: flex-end;  /* push everything to right edge of window */
   height: 100vh;
   width: 100vw;
 }
 .app-frame > .overlay {
   width: 300px;
   flex-shrink: 0;
-  margin-left: auto;  /* push to the right edge of the frame */
 }
 
-/* ── Layout side (the column to the LEFT of the overlay box) ─────────── */
+/* ── Layout side (the column to the LEFT of the overlay box) ──────────
+   Children rendered as [panel][tab] in DOM order so the panel slides in
+   on the LEFT side of the tab, with the tab staying attached to overlay. */
 .layout-side {
   display: flex;
   align-items: stretch;
   flex-shrink: 0;
-  margin-right: 0;
 }
 
 /* The tab button — always visible, sits flush against the overlay's left edge */
@@ -691,6 +692,8 @@ html, body {
 .layout-tab--open {
   background: rgba(70, 50, 28, 0.95);
   border-color: rgba(200, 170, 110, 0.7);
+  border-radius: 0;        /* flush with panel on the left, overlay on the right */
+  border-left: none;
 }
 .layout-tab--disabled {
   opacity: 0.35;
@@ -720,7 +723,6 @@ html, body {
   border: 1px solid var(--border);
   border-right: none;
   border-radius: 6px 0 0 6px;
-  margin-right: -1px;  /* overlap the overlay's left border for a seamless join */
   display: flex;
   flex-direction: column;
   overflow: hidden;

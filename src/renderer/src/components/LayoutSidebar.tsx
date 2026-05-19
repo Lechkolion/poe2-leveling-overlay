@@ -71,25 +71,7 @@ export default function LayoutSidebar() {
 
   return (
     <div className={`layout-side ${isOpen ? 'layout-side--open' : ''}`}>
-      {/* Persistent tab — always visible. Disabled if no layouts for current zone */}
-      <button
-        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''} ${!hasLayouts ? 'layout-tab--disabled' : ''}`}
-        onClick={hasLayouts ? toggleLayoutSidebar : undefined}
-        disabled={!hasLayouts}
-        title={
-          !zoneName
-            ? 'Waiting for zone detection (enter a zone in-game)'
-            : !hasLayouts
-              ? `No Exile-UI layouts for ${zoneName}`
-              : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
-        }
-        aria-label="Toggle zone layouts"
-      >
-        <GiTreasureMap size={16} />
-        {hasLayouts && <span className="layout-tab-count">{total}</span>}
-      </button>
-
-      {/* Panel — only takes space when open (window expanded to fit) */}
+      {/* Panel renders BEFORE tab so it slides in on the LEFT of the tab */}
       {isOpen && displayFile && (
         <div className="layout-panel">
           <div className="layout-panel-header">
@@ -160,6 +142,26 @@ export default function LayoutSidebar() {
           <div className="layout-panel-credit">via Lailloken/Exile-UI (MIT)</div>
         </div>
       )}
+
+      {/* Persistent tab — always visible. Disabled if no layouts for current zone.
+          Renders AFTER panel in DOM so it sits to the RIGHT of the panel,
+          always flush against the overlay's left edge. */}
+      <button
+        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''} ${!hasLayouts ? 'layout-tab--disabled' : ''}`}
+        onClick={hasLayouts ? toggleLayoutSidebar : undefined}
+        disabled={!hasLayouts}
+        title={
+          !zoneName
+            ? 'Waiting for zone detection (enter a zone in-game)'
+            : !hasLayouts
+              ? `No Exile-UI layouts for ${zoneName}`
+              : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
+        }
+        aria-label="Toggle zone layouts"
+      >
+        <GiTreasureMap size={16} />
+        {hasLayouts && <span className="layout-tab-count">{total}</span>}
+      </button>
     </div>
   )
 }
