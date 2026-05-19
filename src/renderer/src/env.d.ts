@@ -5,6 +5,7 @@ interface Window {
     setIgnoreMouse: (ignore: boolean) => void
     openExternal: (url: string) => void
     resizeWindow: (height: number) => void
+    setSidebarOpen: (open: boolean) => void
     setLogPath: (path: string) => void
     getLogPath: () => Promise<string | null>
     onZoneChange: (cb: (zone: string) => void) => (() => void)

@@ -9,10 +9,17 @@ let logWatcher: LogWatcher | null = null
 let questOCR: QuestOCR | null = null
 let quickKeyAccelerator: string | null = null
 
+// Window width layout:
+//   TAB_W (left edge, always visible) + sidebar_w (0 when closed, 400 when open) + OVERLAY_W (main content)
+// Right edge stays fixed; window grows leftward when sidebar opens.
+const TAB_W = 26
+const OVERLAY_W = 300
+const SIDEBAR_W = 400
+
 function createOverlayWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
 
-  const windowWidth = 300
+  const windowWidth = TAB_W + OVERLAY_W  // collapsed
   const windowHeight = 750
 
   mainWindow = new BrowserWindow({
@@ -92,6 +99,17 @@ function setupIPC(): void {
       const [w] = mainWindow.getSize()
       mainWindow.setSize(w, Math.min(Math.max(height, 120), 900))
     }
+  })
+
+  // Renderer requests sidebar open/close — window grows leftward, right edge stays fixed
+  ipcMain.on('set-sidebar-open', (_, open: boolean) => {
+    if (!mainWindow) return
+    const [, h] = mainWindow.getSize()
+    const [x, y] = mainWindow.getPosition()
+    const oldW = mainWindow.getSize()[0]
+    const newW = open ? TAB_W + SIDEBAR_W + OVERLAY_W : TAB_W + OVERLAY_W
+    const dx = oldW - newW  // positive = shrinking, negative = growing
+    mainWindow.setBounds({ x: x + dx, y, width: newW, height: h })
   })
 
   // Renderer requests log path change

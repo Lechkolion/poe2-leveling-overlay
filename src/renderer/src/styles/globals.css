@@ -43,6 +43,9 @@
 /* ── Base ──────────────────────────────────────────────────────────────── */
 html, body {
   height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background: transparent;
   font-family: var(--font);
   font-size: 14px;
@@ -50,12 +53,12 @@ html, body {
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
   user-select: none;
+  overflow: hidden;
 }
 
 #root {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
 /* ── Overlay Container ─────────────────────────────────────────────────── */
@@ -638,40 +641,66 @@ html, body {
   animation: fadeIn 0.15s ease;
 }
 
-/* ── Layout sidebar (slide-in panel for zone layouts) ────────────────── */
+/* ── App frame (flex row containing sidebar + main overlay) ──────────── */
+.app-frame {
+  display: flex;
+  align-items: stretch;
+  height: 100vh;
+  width: 100vw;
+}
+.app-frame > .overlay {
+  width: 300px;
+  flex-shrink: 0;
+  margin-left: auto;  /* push to the right edge of the frame */
+}
+
+/* ── Layout side (the column to the LEFT of the overlay box) ─────────── */
+.layout-side {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  margin-right: 0;
+}
+
+/* The tab button — always visible, sits flush against the overlay's left edge */
 .layout-tab {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 900;
-  width: 22px;
-  height: 56px;
+  align-self: center;
+  width: 26px;
+  height: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   padding: 0;
-  border: 1px solid rgba(200, 170, 110, 0.35);
-  border-left: none;
-  border-radius: 0 4px 4px 0;
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 5px 0 0 5px;
   background: rgba(20, 18, 14, 0.92);
   color: var(--gold);
   cursor: pointer;
-  transition: width 0.12s, background 0.12s, border-color 0.12s, box-shadow 0.12s;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
   -webkit-app-region: no-drag;
+  flex-shrink: 0;
 }
 .layout-tab:hover {
-  width: 28px;
-  background: rgba(40, 30, 18, 0.95);
+  background: rgba(45, 35, 20, 0.95);
   border-color: rgba(200, 170, 110, 0.7);
-  box-shadow: 2px 0 8px rgba(200, 170, 110, 0.25);
+  box-shadow: -2px 0 8px rgba(200, 170, 110, 0.25);
 }
 .layout-tab--open {
-  left: 0;
-  border-color: rgba(200, 170, 110, 0.6);
-  background: rgba(60, 45, 24, 0.95);
+  background: rgba(70, 50, 28, 0.95);
+  border-color: rgba(200, 170, 110, 0.7);
+}
+.layout-tab--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  color: var(--text-faint);
+}
+.layout-tab--disabled:hover {
+  background: rgba(20, 18, 14, 0.92);
+  border-color: var(--border);
+  box-shadow: none;
 }
 .layout-tab-count {
   font-family: var(--font-display);
@@ -682,28 +711,23 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
-.layout-sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 22px; /* anchored to right side of tab */
-  width: 0;
+/* The panel — only present when sidebar is open. The window has been
+   resized via IPC to make room for it. */
+.layout-panel {
+  width: 400px;
+  flex-shrink: 0;
   background: rgba(12, 10, 8, 0.98);
-  border-right: 1px solid rgba(200, 170, 110, 0.25);
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  transition: width 0.18s ease;
-  z-index: 850;
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  margin-right: -1px;  /* overlap the overlay's left border for a seamless join */
   display: flex;
   flex-direction: column;
-  -webkit-app-region: no-drag;
-}
-.layout-sidebar--open {
-  width: calc(100vw - 22px);
-  max-width: 480px;
+  overflow: hidden;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.55);
 }
 
-.layout-sidebar-header {
+.layout-panel-header {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -712,7 +736,7 @@ html, body {
   background: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
 }
-.layout-sidebar-title {
+.layout-panel-title {
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: 600;
@@ -723,14 +747,14 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.layout-sidebar-counter {
+.layout-panel-counter {
   font-family: var(--font-display);
   font-size: 10px;
   font-weight: 700;
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
-.layout-sidebar-close {
+.layout-panel-close {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 3px;
@@ -743,13 +767,13 @@ html, body {
   justify-content: center;
   transition: color 0.12s, background 0.12s, border-color 0.12s;
 }
-.layout-sidebar-close:hover {
+.layout-panel-close:hover {
   color: #e05040;
   background: rgba(192, 64, 48, 0.15);
   border-color: rgba(192, 64, 48, 0.4);
 }
 
-.layout-sidebar-image-wrap {
+.layout-panel-image-wrap {
   position: relative;
   flex: 1;
   min-height: 0;
@@ -759,13 +783,13 @@ html, body {
   padding: 10px;
   background: #000;
 }
-.layout-sidebar-image {
+.layout-panel-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   display: block;
 }
-.layout-sidebar-nav {
+.layout-panel-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -782,15 +806,15 @@ html, body {
   transition: background 0.12s, border-color 0.12s, transform 0.12s;
   z-index: 2;
 }
-.layout-sidebar-nav:hover {
+.layout-panel-nav:hover {
   background: rgba(0, 0, 0, 0.9);
   border-color: rgba(200, 170, 110, 0.75);
   transform: translateY(-50%) scale(1.1);
 }
-.layout-sidebar-nav--prev { left: 6px; }
-.layout-sidebar-nav--next { right: 6px; }
+.layout-panel-nav--prev { left: 6px; }
+.layout-panel-nav--next { right: 6px; }
 
-.layout-sidebar-strip {
+.layout-panel-strip {
   display: flex;
   gap: 4px;
   padding: 6px 8px;
@@ -801,13 +825,13 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: rgba(200, 170, 110, 0.3) transparent;
 }
-.layout-sidebar-strip::-webkit-scrollbar { height: 5px; }
-.layout-sidebar-strip::-webkit-scrollbar-track { background: transparent; }
-.layout-sidebar-strip::-webkit-scrollbar-thumb {
+.layout-panel-strip::-webkit-scrollbar { height: 5px; }
+.layout-panel-strip::-webkit-scrollbar-track { background: transparent; }
+.layout-panel-strip::-webkit-scrollbar-thumb {
   background: rgba(200, 170, 110, 0.3);
   border-radius: 3px;
 }
-.layout-sidebar-thumb {
+.layout-panel-thumb {
   flex-shrink: 0;
   width: 48px;
   height: 48px;
@@ -820,24 +844,24 @@ html, body {
   opacity: 0.6;
   transition: opacity 0.12s, border-color 0.12s, transform 0.12s;
 }
-.layout-sidebar-thumb:hover {
+.layout-panel-thumb:hover {
   opacity: 0.9;
   border-color: rgba(200, 170, 110, 0.5);
   transform: scale(1.05);
 }
-.layout-sidebar-thumb--active {
+.layout-panel-thumb--active {
   opacity: 1;
   border-color: var(--gold);
   box-shadow: 0 0 6px rgba(200, 170, 110, 0.4);
 }
-.layout-sidebar-thumb img {
+.layout-panel-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.layout-sidebar-credit {
+.layout-panel-credit {
   text-align: center;
   font-family: var(--font-display);
   font-size: 9px;

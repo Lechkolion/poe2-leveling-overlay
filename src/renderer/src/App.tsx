@@ -73,27 +73,29 @@ export default function App() {
   }, [advanceStep, navigateToQuest])
 
   return (
-    <div
-      ref={containerRef}
-      className="overlay"
-    >
-      <Header />
-      <ZoneBanner />
-      <div className="overlay-content">
-        {showSettings ? (
-          <Settings />
-        ) : showQuestBrowser ? (
-          <QuestBrowser />
-        ) : (
-          <>
-            <QuestSteps />
-            <RewardAlert />
-            <MiniMapHint />
-          </>
-        )}
-      </div>
-      <HotkeyBar />
+    <div className="app-frame">
       <LayoutSidebar />
+      <div
+        ref={containerRef}
+        className="overlay"
+      >
+        <Header />
+        <ZoneBanner />
+        <div className="overlay-content">
+          {showSettings ? (
+            <Settings />
+          ) : showQuestBrowser ? (
+            <QuestBrowser />
+          ) : (
+            <>
+              <QuestSteps />
+              <RewardAlert />
+              <MiniMapHint />
+            </>
+          )}
+        </div>
+        <HotkeyBar />
+      </div>
       <LayoutModal />
     </div>
   )

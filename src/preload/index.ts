@@ -10,6 +10,7 @@ const api = {
 
   // Window sizing
   resizeWindow: (height: number) => ipcRenderer.send('resize-window', height),
+  setSidebarOpen: (open: boolean) => ipcRenderer.send('set-sidebar-open', open),
 
   // Log file
   setLogPath: (path: string) => ipcRenderer.send('set-log-path', path),
