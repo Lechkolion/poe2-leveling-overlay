@@ -71,7 +71,7 @@ export const ACT2_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Boss is at the caravan blockade in the center/north',
       exitHint: 'After kill: proceed into Mawdun Mine',
-      tips: ['Rubble AoE attacks — dodge away from ground markers', 'Rudja in Mine is optional — skip (gem only)']
+      tips: ['Rubble AoE attacks — dodge away from ground markers', 'After kill: continue into Mawdun Mine via the connected tunnel']
     }
   },
   {

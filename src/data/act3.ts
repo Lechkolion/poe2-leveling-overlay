@@ -91,14 +91,14 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Jungle Ruins',
     actId: 3,
     type: 'interact',
-    instruction: 'Find and activate the Canal Mechanism (main quest objective).',
+    instruction: 'Scout Jungle Ruins exits — find entrances to Venom Crypts AND Infested Barrens (just tag the checkpoints/waypoints, don\'t fully enter yet).',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
       layoutType: 'open',
-      objectiveHint: 'Canal mechanism is a large stone lever/wheel near water',
-      exitHint: 'After activation: proceed to Infested Barrens',
-      tips: []
+      objectiveHint: 'Two exits to find: Venom Crypts (near waypoint) + Infested Barrens',
+      exitHint: 'After scouting both: go to Venom Crypts first (side quest before main)',
+      tips: ['Enter Venom Crypts via Jungle Ruins exit', 'Tag the Infested Barrens waypoint by entering briefly, then portal out']
     }
   },
 
@@ -166,11 +166,11 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'The Azak Bog',
     actId: 3,
     type: 'kill',
-    instruction: 'MUST DO: Kill Ignagduk (+30 Maximum Spirit).',
+    instruction: 'MUST DO: Kill Ignagduk, the Bog Witch in the deepest part of Azak Bog (+30 Maximum Spirit).',
     questType: 'side',
-    detail: 'Ignagduk is a boss in the deepest part of the bog.',
-    reward: { type: 'stat_bonus', description: '+30 Maximum Spirit (permanent)' },
-    speedrunNote: 'DO IT — +30 Spirit is huge. Access Azak Bog from the Chimeral Wetlands area.',
+    detail: 'Ignagduk is a boss in the center/deepest part of the bog. Reward is "Gemrot Skull" — consume from inventory for the permanent +30 Spirit buff.',
+    reward: { type: 'stat_bonus', description: 'Gemrot Skull → +30 Maximum Spirit (permanent)' },
+    speedrunNote: 'DO IT — +30 Spirit is huge. Don\'t forget to CONSUME the Gemrot Skull from inventory after the kill.',
     miniMap: {
       layoutType: 'maze',
       objectiveHint: 'Ignagduk is at the center of the bog',
