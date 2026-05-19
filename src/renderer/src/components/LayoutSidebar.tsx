@@ -2,23 +2,25 @@ import { useEffect, useMemo } from 'react'
 import {
   GiTreasureMap, GiCancel, GiPreviousButton, GiNextButton,
 } from 'react-icons/gi'
-import { useGameStore, getZoneInfo, ALL_STEPS } from '../store/gameStore'
+import { useGameStore, getZoneInfo } from '../store/gameStore'
 
 /**
  * Layout sidebar — lives OUTSIDE the main overlay box, to the left.
- * - Persistent vertical tab strip on the left (always shows when zone has layouts)
- * - Click tab → window expands leftward, sidebar panel slides into the new space
- * - Click tab again or Esc → window collapses back
- * - Image, prev/next, thumbnails only show layouts for the CURRENT zone
+ * Window always reserves space for the panel (so toggling never causes
+ * a resize → no flicker). When closed, the panel area is transparent.
+ *
+ * Shows ONLY layouts for the zone the player is CURRENTLY in (from
+ * `currentZoneName`, set by the log watcher). No fallback to step.zone —
+ * the sidebar is reactive to live game state, not guide progression.
  */
 export default function LayoutSidebar() {
   const {
-    currentZoneName, currentStepIndex,
+    currentZoneName,
     layoutSidebarFile, toggleLayoutSidebar, closeLayoutSidebar, setLayoutSidebarFile,
   } = useGameStore()
 
-  const step = ALL_STEPS[currentStepIndex]
-  const zoneName = currentZoneName || step?.zone || null
+  // Zone strictly from log parsing — no fallback to current step's zone
+  const zoneName = currentZoneName
   const zoneInfo = getZoneInfo(zoneName)
   const layouts = zoneInfo.layouts
   const hasLayouts = layouts.length > 0
@@ -36,17 +38,12 @@ export default function LayoutSidebar() {
   const currentIdx = displayFile ? layouts.indexOf(displayFile) : -1
   const total = layouts.length
 
-  // Tell Electron main to grow/shrink the window
-  useEffect(() => {
-    window.api?.setSidebarOpen(isOpen)
-  }, [isOpen])
-
-  // Auto-close if zone changes to one with no layouts
+  // Auto-close if zone changes to one with no layouts (or zone unknown)
   useEffect(() => {
     if (isOpen && !hasLayouts) closeLayoutSidebar()
   }, [isOpen, hasLayouts, closeLayoutSidebar])
 
-  // If sidebar is open but zone changed and we have layouts, reset to first of new zone
+  // Zone changed mid-view → reset to first layout of new zone
   useEffect(() => {
     if (isOpen && hasLayouts && currentIdx === -1 && layouts.length > 0) {
       setLayoutSidebarFile(layouts[0])
@@ -80,9 +77,11 @@ export default function LayoutSidebar() {
         onClick={hasLayouts ? toggleLayoutSidebar : undefined}
         disabled={!hasLayouts}
         title={
-          !hasLayouts
-            ? 'No Exile-UI layouts for this zone'
-            : isOpen ? 'Close layouts' : `View zone layouts (${total})`
+          !zoneName
+            ? 'Waiting for zone detection (enter a zone in-game)'
+            : !hasLayouts
+              ? `No Exile-UI layouts for ${zoneName}`
+              : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
         }
         aria-label="Toggle zone layouts"
       >
