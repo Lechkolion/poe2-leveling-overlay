@@ -1,6 +1,6 @@
 {
   "name": "poe2-leveling-overlay",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "POE2 Campaign Speedrun Overlay",
   "main": "out/main/index.js",
   "scripts": {
