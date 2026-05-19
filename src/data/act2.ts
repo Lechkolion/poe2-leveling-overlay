@@ -563,7 +563,7 @@ export const ACT2_STEPS: GuideStep[] = [
     zone: 'Dreadnought Vanguard',
     actId: 2,
     type: 'kill',
-    instruction: 'Kill Jamanra the Abomination — Act 2 Final Boss.',
+    instruction: 'Enter Dreadnought Vanguard (forward section of The Dreadnought). Kill Jamanra the Abomination — Act 2 Final Boss.',
     questName: 'The Trail of Corruption',
     questType: 'main',
     isQuestComplete: true,

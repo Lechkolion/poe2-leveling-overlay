@@ -222,7 +222,7 @@ export const ACT4_STEPS: GuideStep[] = [
     zone: 'Solitary Confinement',
     actId: 4,
     type: 'kill',
-    instruction: 'Kill The Prisoner (main quest boss for Abandoned Prison island).',
+    instruction: 'Find the exit from Abandoned Prison → enter Solitary Confinement. Kill The Prisoner (main quest boss). After kill: return to ship.',
     questName: 'The Search',
     questType: 'main',
     miniMap: {
@@ -286,7 +286,7 @@ export const ACT4_STEPS: GuideStep[] = [
     zone: 'Volcanic Warrens',
     actId: 4,
     type: 'kill',
-    instruction: 'Kill Krutog, Lord of Kin in the Volcanic Warrens.',
+    instruction: 'Descend into Volcanic Warrens (center of Isle of Kin). Kill Krutog, Lord of Kin at the Tyrant\'s Throne. After kill: return to Isle of Kin surface to free Matiki.',
     questName: 'The Search',
     questType: 'main',
     miniMap: {
@@ -439,7 +439,7 @@ export const ACT4_STEPS: GuideStep[] = [
     zone: 'Arastas',
     actId: 4,
     type: 'kill',
-    instruction: 'Kill Torvian, Hand of the Saviour in Arastas.',
+    instruction: 'Enter Arastas (selected from boat menu). Talk to Missionary Lorandis → follow him into the church → break the forcefield with any attack. Kill everyone, then continue to the Excavated Pit and kill Torvian, Hand of the Saviour.',
     questName: 'The Search',
     questType: 'main',
     miniMap: {
@@ -456,7 +456,7 @@ export const ACT4_STEPS: GuideStep[] = [
     zone: 'The Excavation',
     actId: 4,
     type: 'kill',
-    instruction: 'Kill Benedictus, First Herald of Utopia in The Excavation.',
+    instruction: 'Enter The Excavation (past Torvian\'s arena in Arastas). Find the Excavated Pit / Precursor Forge and kill Benedictus, First Herald of Utopia. After kill: witness lore events → talk to the Hooded One → portal back to town.',
     questName: 'The Search',
     questType: 'main',
     miniMap: {

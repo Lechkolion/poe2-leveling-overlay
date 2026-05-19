@@ -108,7 +108,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'The Venom Crypts',
     actId: 3,
     type: 'kill',
-    instruction: 'Find the venom phial corpse — then go back to town and turn in at Servi. WARNING: Servi\'s reward is PERMANENT AND CANNOT BE CHANGED LATER.',
+    instruction: 'Enter The Venom Crypts (side area off Jungle Ruins). Find the venom phial corpse — then portal back to Ziggurat Encampment and turn in to Servi. WARNING: Servi\'s reward is PERMANENT AND CANNOT BE CHANGED LATER.',
     questName: 'The Slithering Dead',
     questType: 'side',
     isQuestStart: true,
@@ -129,14 +129,17 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Infested Barrens',
     actId: 3,
     type: 'interact',
-    instruction: 'Activate the Stone Altar (Legacy of the Vaal main quest objective).',
+    instruction: 'Waypoint to Infested Barrens. Activate the Stone Altar in the center (Legacy of the Vaal main quest). Then scout the perimeter for exits to Chimeral Wetlands, Azak Bog, and Matlan Waterways — grab waypoints in each.',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
       layoutType: 'open',
       objectiveHint: 'Altar is in the center of the Barrens',
       exitHint: 'Large stone structure with glowing runes',
-      tips: ['Bug enemies swarm here — keep moving to altar, avoid getting surrounded']
+      tips: [
+        'Bug enemies swarm here — keep moving to altar, avoid getting surrounded',
+        'Exits at the perimeter: Chimeral Wetlands, Azak Bog, Matlan Waterways — tag waypoints in each before continuing',
+      ]
     }
   },
 
@@ -146,7 +149,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'The Azak Bog',
     actId: 3,
     type: 'interact',
-    instruction: 'OPTIONAL: Flameskin Ritual — light all Effigies to gain "Ignagduk\'s Harvest" buff: +25% Fire Resistance + 25% increased item Rarity. ZONE-ONLY, lost on death/exit.',
+    instruction: 'Waypoint to Azak Bog. OPTIONAL: Flameskin Ritual — light all Effigies to gain "Ignagduk\'s Harvest" buff: +25% Fire Resistance + 25% increased item Rarity. ZONE-ONLY, lost on death/exit.',
     questType: 'side',
     optional: true,
     reward: { type: 'stat_bonus', description: 'Ignagduk\'s Harvest: +25% Fire Res + 25% Rarity (ZONE-DURATION ONLY, repeatable, lost on death/exit)' },
@@ -182,7 +185,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Chimeral Wetlands',
     actId: 3,
     type: 'kill',
-    instruction: 'CRITICAL: Kill Xyclucian, the Chimera — drops Inscribed Ultimatum (Trial of Chaos key).',
+    instruction: 'Waypoint to Chimeral Wetlands. CRITICAL: Kill Xyclucian, the Chimera — drops Inscribed Ultimatum (Trial of Chaos key). Also tag the Temple of Chaos waypoint while here (Ascendancy unlock).',
     questName: 'The Trials of Chaos',
     questType: 'ascendancy',
     isQuestStart: true,
@@ -319,7 +322,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'The Drowned City',
     actId: 3,
     type: 'kill',
-    instruction: 'Kill the Queen of Filth (Apex of Filth boss — continue through Drowned City to Apex).',
+    instruction: 'From town stairs (near well/Hooded One), enter The Drowned City. Find both exits — Apex of Filth (main) AND Molten Vault (optional, first char only). Continue main path through Drowned City toward Apex of Filth.',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
@@ -334,7 +337,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'The Molten Vault',
     actId: 3,
     type: 'kill',
-    instruction: 'FIRST CHAR PER LEAGUE ONLY: Kill the boss in Molten Vault, then talk to Oswald in town → unlocks Reforging Bench.',
+    instruction: 'Enter The Molten Vault via the side exit off Drowned City. FIRST CHAR PER LEAGUE ONLY: Kill the boss (Mektul, the Forgemaster), then talk to Oswald in town → unlocks Reforging Bench. Skip on alts.',
     questType: 'side',
     optional: true,
     detail: 'Side area off the Drowned City. Kill the boss, return to Ziggurat Encampment and speak with Oswald. Unlocks the Reforging Bench (account/league-wide).',
@@ -346,7 +349,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Apex of Filth',
     actId: 3,
     type: 'kill',
-    instruction: 'Kill the Queen of Filth. Navigation tip: the zone is a huge spiral — follow it clockwise or counterclockwise. After a full 360° of the spiral you find the boss.',
+    instruction: 'Enter Apex of Filth (from Drowned City). Kill the Queen of Filth. Navigation tip: the zone is a huge spiral — follow it clockwise or counterclockwise. After a full 360° of the spiral you find the boss. After kill: portal back to town for Temple of Kopec.',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
@@ -421,7 +424,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Utzaal',
     actId: 3,
     type: 'kill',
-    instruction: 'Kill Viper Napuatzi (required main quest boss in Utzaal).',
+    instruction: 'In Utzaal: kill Viper Napuatzi (required main quest boss — towards the right/north end of the zone).',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
@@ -438,7 +441,7 @@ export const ACT3_STEPS: GuideStep[] = [
     zone: 'Aggorat',
     actId: 3,
     type: 'interact',
-    instruction: 'Place Sacrificial Heart on the altar in Aggorat (if you have it) — +2 Skill Points.',
+    instruction: 'After Viper Napuatzi: enter Aggorat (top-right exit of Utzaal). Find the Sacrificial Dais (follow voices of Trial of Atziri on the big plaza), loot the dagger, place + stab the Sacrificial Heart on the altar — +2 Skill Points.',
     questType: 'side',
     isQuestComplete: true,
     reward: { type: 'skill_point', amount: 2, description: '+2 Passive Skill Points' },
