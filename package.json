@@ -1,0 +1,45 @@
+{
+  "name": "poe2-leveling-overlay",
+  "version": "1.0.0",
+  "description": "POE2 Campaign Speedrun Overlay",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "package": "npm run build && electron-builder",
+    "sync-live": "npm run build && powershell -NoProfile -Command \"Get-Process | Where-Object { $_.ProcessName -like '*POE2*' } | Stop-Process -Force; Start-Sleep 1; Remove-Item -Recurse -Force app/resources/app/out; Copy-Item -Recurse out app/resources/app/; Copy-Item package.json app/resources/app/package.json\""
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "chokidar": "^3.6.0",
+    "react-icons": "^5.6.0",
+    "tesseract.js": "^7.0.0",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0",
+    "electron-vite": "^2.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  },
+  "build": {
+    "appId": "com.poe2.overlay",
+    "productName": "POE2 Leveling Guide",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.ico"
+    }
+  }
+}

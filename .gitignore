@@ -1,0 +1,12 @@
+node_modules/
+out/
+out-ts/
+dist/
+.DS_Store
+*.tsbuildinfo
+
+# Packaged Electron runtime + bundled app (regenerable via `npm run sync-live`)
+/app/
+
+# Generator script cache (downloaded source JSONs from Exile-UI)
+/scripts/_cache/
