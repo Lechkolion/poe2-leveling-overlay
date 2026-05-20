@@ -8,6 +8,7 @@ let mainWindow: BrowserWindow | null = null
 let logWatcher: LogWatcher | null = null
 let questOCR: QuestOCR | null = null
 let quickKeyAccelerator: string | null = null
+let sidebarExpanded = false  // tracks current window state for IPC guard
 
 // Window starts compact (tab + overlay). When sidebar opens, window grows
 // leftward by SIDEBAR_W (right edge stays fixed). User can also manually
@@ -103,8 +104,12 @@ function setupIPC(): void {
 
   // Sidebar open/close: grow/shrink the window leftward by exactly SIDEBAR_W
   // (preserves user's manual width adjustments + right edge stays pinned).
+  // Guard: only resize on actual transitions (renderer fires false on mount
+  // before any user action, which would shrink the window incorrectly).
   ipcMain.on('set-sidebar-open', (_, open: boolean) => {
     if (!mainWindow) return
+    if (sidebarExpanded === open) return  // no-op if already in that state
+    sidebarExpanded = open
     const bounds = mainWindow.getBounds()
     const dx = open ? SIDEBAR_W : -SIDEBAR_W
     mainWindow.setBounds(
