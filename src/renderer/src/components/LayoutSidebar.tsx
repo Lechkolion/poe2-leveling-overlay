@@ -76,6 +76,31 @@ export default function LayoutSidebar() {
 
   return (
     <div className={`layout-side ${isOpen ? 'layout-side--open' : ''}`}>
+      {/* Empty-state panel when no layouts for current zone */}
+      {isOpen && !hasLayouts && (
+        <div className="layout-panel">
+          <div className="layout-panel-header">
+            <span className="layout-panel-title">{zoneName ?? 'No zone detected'}</span>
+            <button
+              className="layout-panel-close"
+              onClick={closeLayoutSidebar}
+              aria-label="Close"
+              title="Close (Esc)"
+            >
+              <GiCancel size={14} />
+            </button>
+          </div>
+          <div className="layout-panel-empty">
+            <GiTreasureMap size={48} style={{ opacity: 0.3 }} />
+            <div>{zoneName ? `No Exile-UI layouts for ${zoneName}` : 'Waiting for zone detection'}</div>
+            <div className="layout-panel-empty-hint">
+              {zoneName ? 'Walk into another zone to see layouts.' : 'Enter a zone in POE2 to begin.'}
+            </div>
+          </div>
+          <div className="layout-panel-credit">via Lailloken/Exile-UI (MIT)</div>
+        </div>
+      )}
+
       {/* Panel renders BEFORE tab so it slides in on the LEFT of the tab */}
       {isOpen && displayFile && (
         <div className="layout-panel">
@@ -148,15 +173,14 @@ export default function LayoutSidebar() {
         </div>
       )}
 
-      {/* Persistent tab — always visible. Sits to the RIGHT of the panel
-          (when open), flush against the overlay. Greyed but readable when
-          current zone has no Exile-UI layouts. */}
+      {/* Persistent tab — always clickable. Sits to the RIGHT of the panel
+          (when open), flush against the overlay. */}
       <button
         className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''} ${!hasLayouts ? 'layout-tab--empty' : ''}`}
-        onClick={hasLayouts ? toggleLayoutSidebar : undefined}
+        onClick={toggleLayoutSidebar}
         title={
           !zoneName ? 'Waiting for zone detection (enter a zone in-game)'
-            : !hasLayouts ? `No Exile-UI layouts for ${zoneName}`
+            : !hasLayouts ? `No Exile-UI layouts for ${zoneName} — click to open anyway`
             : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
         }
         aria-label="Toggle zone layouts"

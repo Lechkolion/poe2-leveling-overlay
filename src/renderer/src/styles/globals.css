@@ -698,18 +698,40 @@ html, body {
   border-radius: 0;        /* flush with panel on the left, overlay on the right */
   border-left: none;
 }
-/* No-data state — same button, just muted gold so it reads "available but empty" */
+/* No-data state — muted gold border, but still hover-reactive so user
+   knows the button is clickable. */
 .layout-tab--empty {
-  cursor: default;
   color: var(--text-dim);
   border-color: rgba(200, 170, 110, 0.25);
 }
 .layout-tab--empty:hover {
-  background: var(--bg);
-  border-color: rgba(200, 170, 110, 0.25);
+  background: rgba(35, 30, 22, 1);
+  border-color: rgba(200, 170, 110, 0.55);
+  color: var(--gold-dim);
 }
 .layout-tab--empty .layout-tab-count {
   color: var(--text-faint);
+}
+.layout-tab--empty:hover .layout-tab-count {
+  color: var(--gold-dim);
+}
+
+.layout-panel-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.layout-panel-empty-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-style: italic;
 }
 .layout-tab-count {
   font-family: var(--font-display);
