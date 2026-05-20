@@ -645,13 +645,15 @@ html, body {
 .app-frame {
   display: flex;
   align-items: stretch;
-  justify-content: flex-end;  /* push everything to right edge of window */
   height: 100vh;
   width: 100vw;
 }
+/* Overlay flex-grows with window width; never shrinks below readable. */
 .app-frame > .overlay {
-  width: 300px;
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  min-width: 280px;
+  max-width: 100%;
+  margin-left: auto;  /* pin to right edge when window > content */
 }
 
 /* ── Layout side (the column to the LEFT of the overlay box) ──────────

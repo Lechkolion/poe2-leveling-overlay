@@ -9,9 +9,9 @@ let logWatcher: LogWatcher | null = null
 let questOCR: QuestOCR | null = null
 let quickKeyAccelerator: string | null = null
 
-// Window width: always reserves SIDEBAR_W on the left for the layout panel.
-// Window stays one fixed size — no resize on sidebar toggle → no flicker.
-// When sidebar is closed, the panel area is transparent (desktop shows through).
+// Window starts compact (tab + overlay). When sidebar opens, window grows
+// leftward by SIDEBAR_W (right edge stays fixed). User can also manually
+// widen the window by dragging — the overlay content flex-grows to fill.
 const TAB_W = 26
 const OVERLAY_W = 300
 const SIDEBAR_W = 400
@@ -19,7 +19,7 @@ const SIDEBAR_W = 400
 function createOverlayWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
 
-  const windowWidth = SIDEBAR_W + TAB_W + OVERLAY_W
+  const windowWidth = TAB_W + OVERLAY_W  // start compact
   const windowHeight = 750
 
   mainWindow = new BrowserWindow({
@@ -101,7 +101,17 @@ function setupIPC(): void {
     }
   })
 
-  // Sidebar open/close no longer resizes the window — area is always reserved.
+  // Sidebar open/close: grow/shrink the window leftward by exactly SIDEBAR_W
+  // (preserves user's manual width adjustments + right edge stays pinned).
+  ipcMain.on('set-sidebar-open', (_, open: boolean) => {
+    if (!mainWindow) return
+    const bounds = mainWindow.getBounds()
+    const dx = open ? SIDEBAR_W : -SIDEBAR_W
+    mainWindow.setBounds(
+      { x: bounds.x - dx, y: bounds.y, width: bounds.width + dx, height: bounds.height },
+      false,  // animate: false → instant, no flicker
+    )
+  })
 
   // Renderer requests log path change
   ipcMain.on('set-log-path', async (_, customPath: string) => {
