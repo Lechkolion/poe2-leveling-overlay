@@ -697,15 +697,20 @@ html, body {
   border-radius: 0;        /* flush with panel on the left, overlay on the right */
   border-left: none;
 }
-.layout-tab--disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  color: var(--text-faint);
+/* No-data state — fully visible, just muted so user sees "no layouts here" */
+.layout-tab--empty {
+  cursor: default;
+  color: var(--text-dim);
+  border-color: rgba(255, 255, 255, 0.10);
+  background: rgba(20, 18, 14, 0.85);
 }
-.layout-tab--disabled:hover {
-  background: rgba(20, 18, 14, 0.92);
-  border-color: var(--border);
+.layout-tab--empty:hover {
+  background: rgba(20, 18, 14, 0.85);
+  border-color: rgba(255, 255, 255, 0.10);
   box-shadow: none;
+}
+.layout-tab--empty .layout-tab-count {
+  color: var(--text-faint);
 }
 .layout-tab-count {
   font-family: var(--font-display);

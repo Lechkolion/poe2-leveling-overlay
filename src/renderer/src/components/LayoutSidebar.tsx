@@ -74,10 +74,6 @@ export default function LayoutSidebar() {
   const goPrev = () => total > 1 && setLayoutSidebarFile(layouts[(currentIdx - 1 + total) % total])
   const goNext = () => total > 1 && setLayoutSidebarFile(layouts[(currentIdx + 1) % total])
 
-  // Don't render the tab at all when current zone has no layouts.
-  // Avoids the "weird shadow" look from a greyed-out disabled tab.
-  if (!hasLayouts) return null
-
   return (
     <div className={`layout-side ${isOpen ? 'layout-side--open' : ''}`}>
       {/* Panel renders BEFORE tab so it slides in on the LEFT of the tab */}
@@ -152,16 +148,21 @@ export default function LayoutSidebar() {
         </div>
       )}
 
-      {/* Persistent tab — only rendered when current zone has Exile-UI layouts.
-          Sits to the RIGHT of the panel (when open), flush against the overlay. */}
+      {/* Persistent tab — always visible. Sits to the RIGHT of the panel
+          (when open), flush against the overlay. Greyed but readable when
+          current zone has no Exile-UI layouts. */}
       <button
-        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''}`}
-        onClick={toggleLayoutSidebar}
-        title={isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`}
+        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''} ${!hasLayouts ? 'layout-tab--empty' : ''}`}
+        onClick={hasLayouts ? toggleLayoutSidebar : undefined}
+        title={
+          !zoneName ? 'Waiting for zone detection (enter a zone in-game)'
+            : !hasLayouts ? `No Exile-UI layouts for ${zoneName}`
+            : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
+        }
         aria-label="Toggle zone layouts"
       >
         <GiTreasureMap size={18} />
-        <span className="layout-tab-count">{total}</span>
+        <span className="layout-tab-count">{hasLayouts ? total : '—'}</span>
       </button>
     </div>
   )
