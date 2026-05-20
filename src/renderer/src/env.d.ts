@@ -15,6 +15,7 @@ interface Window {
     onToggleCompact: (cb: (compact: boolean) => void) => (() => void)
     onOcrMatch: (cb: (stepIndex: number) => void) => (() => void)
     onLevelChange: (cb: (level: number) => void) => (() => void)
+    onCharacterChange: (cb: (name: string) => void) => (() => void)
     setQuickKey: (key: string) => Promise<boolean>
   }
   electron: {

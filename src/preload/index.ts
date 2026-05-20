@@ -54,6 +54,11 @@ const api = {
     ipcRenderer.on('level-change', handler)
     return () => ipcRenderer.removeListener('level-change', handler)
   },
+  onCharacterChange: (cb: (name: string) => void) => {
+    const handler = (_: Electron.IpcRendererEvent, name: string) => cb(name)
+    ipcRenderer.on('character-change', handler)
+    return () => ipcRenderer.removeListener('character-change', handler)
+  },
   setQuickKey: (key: string): Promise<boolean> => ipcRenderer.invoke('set-quick-key', key)
 }
 

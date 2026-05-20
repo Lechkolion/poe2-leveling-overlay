@@ -16,8 +16,12 @@ const GENERATING_LEVEL_PATTERN = /Generating level \d+ area "([^"]+)"/
 const ZONE_ENTER_PATTERN = /\[SCENE\] Set Source \[(.+?)\]/
 // Filter out act title screens
 const ACT_TITLE_PATTERN = /^Act \d+$/
-// Character level up
-const LEVEL_UP_PATTERN = /is now level (\d+)/
+// Character level up — captures both name + level
+const LEVEL_UP_PATTERN = /:\s+(\S+)\s+is now level (\d+)/
+// Character entering a zone — fires on every area change
+const CHAR_JOIN_PATTERN = /:\s+(\S+)\s+has joined the area/
+// Login: character name appears here on first session login
+const CHAR_LOGIN_PATTERN = /Connecting to instance server.*for character\s+(\S+)/i
 
 // areaId mappings live in src/data/areaIds.ts (shared with renderer).
 
@@ -92,11 +96,15 @@ class LogWatcher extends EventEmitter {
     }
   }
 
-  // Process a single log line: detect zone entry and level-up events.
-  // Returns the resolved zone name if a zone transition was detected, null otherwise.
-  private processLine(line: string): { zone: string | null; level: number | null } {
+  // Process a single log line: detect zone, level-up, and character name.
+  private processLine(line: string): {
+    zone: string | null
+    level: number | null
+    character: string | null
+  } {
     let zone: string | null = null
     let level: number | null = null
+    let character: string | null = null
 
     // Primary: Generating level — stable areaId, language-agnostic
     const genMatch = line.match(GENERATING_LEVEL_PATTERN)
@@ -115,19 +123,39 @@ class LogWatcher extends EventEmitter {
       }
     }
 
-    // Character level-up
+    // Character level-up — captures name + new level
     const lvlMatch = line.match(LEVEL_UP_PATTERN)
     if (lvlMatch) {
-      level = parseInt(lvlMatch[1], 10)
+      character = lvlMatch[1]
+      level = parseInt(lvlMatch[2], 10)
     }
 
-    return { zone, level }
+    // Character has joined the area — fires on every zone enter, most frequent signal
+    if (!character) {
+      const joinMatch = line.match(CHAR_JOIN_PATTERN)
+      if (joinMatch) character = joinMatch[1]
+    }
+
+    // Login event — character name appears once per session
+    if (!character) {
+      const loginMatch = line.match(CHAR_LOGIN_PATTERN)
+      if (loginMatch) character = loginMatch[1]
+    }
+
+    return { zone, level, character }
   }
 
   private emitZone(zone: string): void {
     if (zone === this.lastEmittedZone) return
     this.lastEmittedZone = zone
     this.emit('zone-change', zone)
+  }
+
+  private lastEmittedChar: string | null = null
+  private emitCharacter(name: string): void {
+    if (name === this.lastEmittedChar) return
+    this.lastEmittedChar = name
+    this.emit('character-change', name)
   }
 
   // Scan last 100 KB to detect which zone the player is currently in on startup.
@@ -140,12 +168,15 @@ class LogWatcher extends EventEmitter {
         const rl = createInterface({ input: stream })
         let lastZone: string | null = null
         let lastLevel: number | null = null
+        let lastChar: string | null = null
         rl.on('line', (line) => {
-          const { zone, level } = this.processLine(line)
+          const { zone, level, character } = this.processLine(line)
           if (zone) lastZone = zone
           if (level) lastLevel = level
+          if (character) lastChar = character
         })
         rl.on('close', () => {
+          if (lastChar) this.emitCharacter(lastChar)
           if (lastZone) this.emitZone(lastZone)
           if (lastLevel !== null) this.emit('level-change', lastLevel)
           resolve()
@@ -175,7 +206,8 @@ class LogWatcher extends EventEmitter {
       const rl = createInterface({ input: stream })
 
       rl.on('line', (line) => {
-        const { zone, level } = this.processLine(line)
+        const { zone, level, character } = this.processLine(line)
+        if (character) this.emitCharacter(character)
         if (zone) this.emitZone(zone)
         if (level !== null) this.emit('level-change', level)
       })

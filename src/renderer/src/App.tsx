@@ -14,7 +14,8 @@ import LayoutSidebar from './components/LayoutSidebar'
 export default function App() {
   const {
     showSettings, showQuestBrowser, quickAdvanceKey,
-    onZoneChange, advanceStep, jumpToStep, navigateToQuest, setLogPath, setLogError, setCharacterLevel
+    onZoneChange, onCharacterChange, advanceStep, jumpToStep, navigateToQuest,
+    setLogPath, setLogError, setCharacterLevel,
   } = useGameStore()
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -39,6 +40,7 @@ export default function App() {
     const unsubLogError = window.api?.onLogError((msg) => setLogError(msg))
     const unsubOcr = window.api?.onOcrMatch(jumpToStep)
     const unsubLevel = window.api?.onLevelChange(setCharacterLevel)
+    const unsubChar = window.api?.onCharacterChange(onCharacterChange)
 
     // Init: get current log path
     window.api?.getLogPath().then(path => {
@@ -57,8 +59,9 @@ export default function App() {
       unsubLogError?.()
       unsubOcr?.()
       unsubLevel?.()
+      unsubChar?.()
     }
-  }, [onZoneChange, advanceStep, jumpToStep, setLogPath, setLogError, setCharacterLevel, quickAdvanceKey])
+  }, [onZoneChange, onCharacterChange, advanceStep, jumpToStep, setLogPath, setLogError, setCharacterLevel, quickAdvanceKey])
 
   // Keyboard shortcuts (also handled globally, but useful in dev)
   useEffect(() => {

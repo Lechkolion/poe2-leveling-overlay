@@ -3,7 +3,7 @@ import { useGameStore, getCurrentActName, ALL_STEPS } from '../store/gameStore'
 
 export default function Header() {
   const {
-    currentStepIndex, characterLevel,
+    currentStepIndex, characterLevel, currentCharacter,
     toggleSettings, toggleQuestBrowser,
     showSettings, showQuestBrowser
   } = useGameStore()
@@ -14,7 +14,9 @@ export default function Header() {
   return (
     <div className="header drag-region">
       <div className="header-left">
-        <span className="header-title">POE2</span>
+        {currentCharacter
+          ? <span className="header-title" title={`Profile: ${currentCharacter}`}>{currentCharacter}</span>
+          : <span className="header-title">POE2</span>}
         {characterLevel > 0 && <span className="header-level">Lv{characterLevel}</span>}
         <span className="header-act">{actName || 'Campaign Guide'}</span>
       </div>

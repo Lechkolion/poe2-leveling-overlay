@@ -159,6 +159,10 @@ function setupLogWatcherEvents(): void {
     mainWindow?.webContents.send('level-change', level)
   })
 
+  logWatcher.on('character-change', (name: string) => {
+    mainWindow?.webContents.send('character-change', name)
+  })
+
   logWatcher.on('log-found', (path: string) => {
     mainWindow?.webContents.send('log-found', path)
   })

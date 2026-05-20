@@ -17,6 +17,7 @@ interface GameState {
   currentStepIndex: number
   completedStepIds: Set<string>
   currentZoneName: string | null
+  currentCharacter: string | null
   characterLevel: number
   quickAdvanceKey: string
   logPath: string | null
@@ -30,6 +31,7 @@ interface GameState {
 
 interface GameActions {
   onZoneChange: (zoneName: string) => void
+  onCharacterChange: (name: string) => void
   setCharacterLevel: (level: number) => void
   setQuickAdvanceKey: (key: string) => void
   advanceStep: (delta: number) => void
@@ -56,11 +58,32 @@ interface GameActions {
 type GameStore = GameState & GameActions
 
 const CONTEXT_AFTER = 5
-const STORAGE_KEY = 'poe2-guide-v1'
+const STORAGE_PREFIX = 'poe2-guide-v2:'
+const LEGACY_KEY = 'poe2-guide-v1'
+const ACTIVE_CHAR_KEY = 'poe2-active-character'
+const DEFAULT_PROFILE = '__default__'
 
-function loadProgress(): { currentStepIndex: number; completedStepIds: Set<string> } {
+function profileKey(charName: string | null): string {
+  return STORAGE_PREFIX + (charName || DEFAULT_PROFILE)
+}
+
+interface ProfileData {
+  currentStepIndex: number
+  completedStepIds: Set<string>
+}
+
+function loadProgress(charName: string | null): ProfileData {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    let saved = localStorage.getItem(profileKey(charName))
+    // Migrate legacy v1 progress to default profile on first run
+    if (!saved && !charName) {
+      const legacy = localStorage.getItem(LEGACY_KEY)
+      if (legacy) {
+        saved = legacy
+        localStorage.setItem(profileKey(null), legacy)
+        localStorage.removeItem(LEGACY_KEY)
+      }
+    }
     if (!saved) return { currentStepIndex: 0, completedStepIds: new Set() }
     const { stepIndex, completedIds } = JSON.parse(saved)
     return {
@@ -72,21 +95,23 @@ function loadProgress(): { currentStepIndex: number; completedStepIds: Set<strin
   }
 }
 
-function saveProgress(stepIndex: number, completedIds: Set<string>): void {
+function saveProgress(charName: string | null, stepIndex: number, completedIds: Set<string>): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    localStorage.setItem(profileKey(charName), JSON.stringify({
       stepIndex,
       completedIds: [...completedIds],
     }))
   } catch {}
 }
 
-const saved = loadProgress()
+const initialChar = localStorage.getItem(ACTIVE_CHAR_KEY)
+const saved = loadProgress(initialChar)
 
 export const useGameStore = create<GameStore>((set, get) => ({
   currentStepIndex: saved.currentStepIndex,
   completedStepIds: saved.completedStepIds,
   currentZoneName: null,
+  currentCharacter: initialChar,
   characterLevel: 0,
   quickAdvanceKey: localStorage.getItem('poe2-quick-key') ?? '',
   logPath: null,
@@ -117,10 +142,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // Only advance forward, never regress on revisiting zones
     if (targetIdx > currentStepIndex && ALL_STEPS[targetIdx]?.zone === zoneName) {
       set({ currentStepIndex: targetIdx })
-      saveProgress(targetIdx, completedStepIds)
+      saveProgress(get().currentCharacter, targetIdx, completedStepIds)
     } else if (zoneFirstStep > currentStepIndex) {
       set({ currentStepIndex: zoneFirstStep })
-      saveProgress(zoneFirstStep, completedStepIds)
+      saveProgress(get().currentCharacter, zoneFirstStep, completedStepIds)
     }
   },
 
@@ -128,7 +153,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { currentStepIndex, completedStepIds } = get()
     const next = Math.max(0, Math.min(ALL_STEPS.length - 1, currentStepIndex + delta))
     set({ currentStepIndex: next })
-    saveProgress(next, completedStepIds)
+    saveProgress(get().currentCharacter, next, completedStepIds)
   },
 
   jumpToStep: (stepIndex: number) => {
@@ -137,7 +162,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // Only jump forward — used by OCR and auto-advance to avoid regression
     if (clamped > currentStepIndex) {
       set({ currentStepIndex: clamped })
-      saveProgress(clamped, completedStepIds)
+      saveProgress(get().currentCharacter, clamped, completedStepIds)
     }
   },
 
@@ -145,7 +170,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { completedStepIds } = get()
     const clamped = Math.max(0, Math.min(ALL_STEPS.length - 1, stepIndex))
     set({ currentStepIndex: clamped })
-    saveProgress(clamped, completedStepIds)
+    saveProgress(get().currentCharacter, clamped, completedStepIds)
   },
 
   markCurrentDone: () => {
@@ -156,7 +181,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     updated.add(step.id)
     const next = Math.min(ALL_STEPS.length - 1, currentStepIndex + 1)
     set({ completedStepIds: updated, currentStepIndex: next })
-    saveProgress(next, updated)
+    saveProgress(get().currentCharacter, next, updated)
   },
 
   markStep: (stepId: string) => {
@@ -168,7 +193,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       ? Math.min(ALL_STEPS.length - 1, currentStepIndex + 1)
       : currentStepIndex
     set({ completedStepIds: updated, currentStepIndex: next })
-    saveProgress(next, updated)
+    saveProgress(get().currentCharacter, next, updated)
   },
 
   unmarkStep: (stepId: string) => {
@@ -180,7 +205,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const stepIndex = ALL_STEPS.findIndex(s => s.id === stepId)
     const newIdx = stepIndex < currentStepIndex ? stepIndex : currentStepIndex
     set({ completedStepIds: updated, currentStepIndex: newIdx })
-    saveProgress(newIdx, updated)
+    saveProgress(get().currentCharacter, newIdx, updated)
   },
 
   navigateToQuest: (delta: number) => {
@@ -190,7 +215,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const targetPos = Math.max(0, Math.min(QUEST_ORDER.length - 1, currentPos + delta))
     const targetIdx = QUEST_FIRST_STEP.get(QUEST_ORDER[targetPos]) ?? currentStepIndex
     set({ currentStepIndex: targetIdx })
-    saveProgress(targetIdx, completedStepIds)
+    saveProgress(get().currentCharacter, targetIdx, completedStepIds)
+  },
+
+  onCharacterChange: (name: string) => {
+    const { currentCharacter } = get()
+    if (currentCharacter === name) return  // same character, no-op
+    // Persist active character + load that character's profile
+    localStorage.setItem(ACTIVE_CHAR_KEY, name)
+    const profile = loadProgress(name)
+    set({
+      currentCharacter: name,
+      currentStepIndex: profile.currentStepIndex,
+      completedStepIds: profile.completedStepIds,
+      // Reset transient session state — character switch is a clean slate
+      characterLevel: 0,
+      currentZoneName: null,
+    })
   },
 
   setCharacterLevel: (level: number) => set({ characterLevel: level }),
@@ -211,7 +252,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   setLayoutSidebarFile: (file: string) => set({ layoutSidebarFile: file }),
 
   resetProgress: () => {
-    localStorage.removeItem(STORAGE_KEY)
+    // Reset only the active character's profile (per-character now)
+    localStorage.removeItem(profileKey(get().currentCharacter))
     set({ currentStepIndex: 0, completedStepIds: new Set(), currentZoneName: null, showQuestBrowser: false })
   },
 }))
