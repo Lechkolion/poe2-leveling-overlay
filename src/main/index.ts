@@ -8,19 +8,18 @@ let mainWindow: BrowserWindow | null = null
 let logWatcher: LogWatcher | null = null
 let questOCR: QuestOCR | null = null
 let quickKeyAccelerator: string | null = null
-let sidebarExpanded = false  // tracks current window state for IPC guard
 
-// Window starts compact (tab + overlay). When sidebar opens, window grows
-// leftward by SIDEBAR_W (right edge stays fixed). User can also manually
-// widen the window by dragging — the overlay content flex-grows to fill.
-const TAB_W = 26
+// Window is permanently wide enough to fit the sidebar panel. The panel
+// area is transparent when sidebar is closed (game/desktop visible through).
+// This avoids the resize-flicker that happens when toggling.
+const TAB_W = 28
 const OVERLAY_W = 300
 const SIDEBAR_W = 400
 
 function createOverlayWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
 
-  const windowWidth = TAB_W + OVERLAY_W  // start compact
+  const windowWidth = SIDEBAR_W + TAB_W + OVERLAY_W  // always reserve sidebar space
   const windowHeight = 750
 
   mainWindow = new BrowserWindow({
@@ -102,21 +101,7 @@ function setupIPC(): void {
     }
   })
 
-  // Sidebar open/close: grow/shrink the window leftward by exactly SIDEBAR_W
-  // (preserves user's manual width adjustments + right edge stays pinned).
-  // Guard: only resize on actual transitions (renderer fires false on mount
-  // before any user action, which would shrink the window incorrectly).
-  ipcMain.on('set-sidebar-open', (_, open: boolean) => {
-    if (!mainWindow) return
-    if (sidebarExpanded === open) return  // no-op if already in that state
-    sidebarExpanded = open
-    const bounds = mainWindow.getBounds()
-    const dx = open ? SIDEBAR_W : -SIDEBAR_W
-    mainWindow.setBounds(
-      { x: bounds.x - dx, y: bounds.y, width: bounds.width + dx, height: bounds.height },
-      false,  // animate: false → instant, no flicker
-    )
-  })
+  // Sidebar open/close no longer resizes the window — area is always reserved.
 
   // Renderer requests log path change
   ipcMain.on('set-log-path', async (_, customPath: string) => {

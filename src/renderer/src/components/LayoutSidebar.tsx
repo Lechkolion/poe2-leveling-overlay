@@ -38,16 +38,6 @@ export default function LayoutSidebar() {
   const currentIdx = displayFile ? layouts.indexOf(displayFile) : -1
   const total = layouts.length
 
-  // Tell Electron main to grow/shrink window (right edge stays pinned)
-  useEffect(() => {
-    window.api?.setSidebarOpen(isOpen)
-  }, [isOpen])
-
-  // Auto-close if zone changes to one with no layouts (or zone unknown)
-  useEffect(() => {
-    if (isOpen && !hasLayouts) closeLayoutSidebar()
-  }, [isOpen, hasLayouts, closeLayoutSidebar])
-
   // Zone changed mid-view → reset to first layout of new zone
   useEffect(() => {
     if (isOpen && hasLayouts && currentIdx === -1 && layouts.length > 0) {
