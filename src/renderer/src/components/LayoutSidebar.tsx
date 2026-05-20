@@ -74,6 +74,10 @@ export default function LayoutSidebar() {
   const goPrev = () => total > 1 && setLayoutSidebarFile(layouts[(currentIdx - 1 + total) % total])
   const goNext = () => total > 1 && setLayoutSidebarFile(layouts[(currentIdx + 1) % total])
 
+  // Don't render the tab at all when current zone has no layouts.
+  // Avoids the "weird shadow" look from a greyed-out disabled tab.
+  if (!hasLayouts) return null
+
   return (
     <div className={`layout-side ${isOpen ? 'layout-side--open' : ''}`}>
       {/* Panel renders BEFORE tab so it slides in on the LEFT of the tab */}
@@ -148,24 +152,16 @@ export default function LayoutSidebar() {
         </div>
       )}
 
-      {/* Persistent tab — always visible. Disabled if no layouts for current zone.
-          Renders AFTER panel in DOM so it sits to the RIGHT of the panel,
-          always flush against the overlay's left edge. */}
+      {/* Persistent tab — only rendered when current zone has Exile-UI layouts.
+          Sits to the RIGHT of the panel (when open), flush against the overlay. */}
       <button
-        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''} ${!hasLayouts ? 'layout-tab--disabled' : ''}`}
-        onClick={hasLayouts ? toggleLayoutSidebar : undefined}
-        disabled={!hasLayouts}
-        title={
-          !zoneName
-            ? 'Waiting for zone detection (enter a zone in-game)'
-            : !hasLayouts
-              ? `No Exile-UI layouts for ${zoneName}`
-              : isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`
-        }
+        className={`layout-tab no-drag ${isOpen ? 'layout-tab--open' : ''}`}
+        onClick={toggleLayoutSidebar}
+        title={isOpen ? 'Close layouts' : `View ${total} layout${total > 1 ? 's' : ''} for ${zoneName}`}
         aria-label="Toggle zone layouts"
       >
-        <GiTreasureMap size={16} />
-        {hasLayouts && <span className="layout-tab-count">{total}</span>}
+        <GiTreasureMap size={18} />
+        <span className="layout-tab-count">{total}</span>
       </button>
     </div>
   )
