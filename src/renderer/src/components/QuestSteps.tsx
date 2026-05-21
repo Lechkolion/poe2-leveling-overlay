@@ -82,44 +82,34 @@ const REWARD_ICON: Record<string, IconType> = {
 
 const ICON_BG_TYPES = new Set(['kill', 'trial', 'waypoint', 'interact'])
 
-const QUEST_TYPE_LABEL: Record<string, string> = {
-  main:        'MAIN',
-  side:        'SIDE',
-  ascendancy:  'ASCEND',
-  trial:       'TRIAL',
-}
 
 interface VisibleStep {
   step: GuideStep
   absoluteIndex: number
   isCurrent: boolean
   isCompleted: boolean
-  orderLabel: string   // "1", "2", "OPT", etc.
+  orderLabel: string   // "1", "2", "OPT", etc. — sequential within zone
 }
 
-interface QuestGroup {
-  questName: string | null
-  questType: string | undefined
+interface ZoneGroup {
+  zone: string
   steps: VisibleStep[]
   requiredTotal: number
   requiredDone: number
 }
 
-function groupByQuest(rawSteps: Array<Omit<VisibleStep, 'orderLabel'>>): QuestGroup[] {
-  const groups: QuestGroup[] = []
-  let current: QuestGroup | null = null
+/** Group consecutive steps by zone. Numbering is sequential within each
+ *  zone (across all quests there) — so the user sees the actual order to
+ *  do things, not per-quest counters. */
+function groupByZone(rawSteps: Array<Omit<VisibleStep, 'orderLabel'>>): ZoneGroup[] {
+  const groups: ZoneGroup[] = []
+  let current: ZoneGroup | null = null
   let counter = 0
 
   for (const item of rawSteps) {
-    const key = item.step.questName ?? null
-    if (!current || current.questName !== key) {
-      current = {
-        questName: key,
-        questType: item.step.questType,
-        steps: [],
-        requiredTotal: 0,
-        requiredDone: 0,
-      }
+    const key = item.step.zone
+    if (!current || current.zone !== key) {
+      current = { zone: key, steps: [], requiredTotal: 0, requiredDone: 0 }
       groups.push(current)
       counter = 0
     }
@@ -140,12 +130,16 @@ function StepItem({
   isCompleted,
   absoluteIndex,
   orderLabel,
+  questTag,
+  questType,
 }: {
   step: GuideStep
   isCurrent: boolean
   isCompleted: boolean
   absoluteIndex: number
   orderLabel: string
+  questTag?: string
+  questType?: string
 }) {
   const { markCurrentDone, goToStep, unmarkStep } = useGameStore()
 
@@ -190,6 +184,9 @@ function StepItem({
         )}
       </div>
       <div className="step-body">
+        {questTag && (
+          <div className={`step-quest-tag step-quest-tag--${questType ?? 'side'}`}>{questTag}</div>
+        )}
         <div className="step-instruction">{hl(step.instruction)}</div>
         {isCurrent && step.detail && (
           <div className="step-detail">{hl(step.detail)}</div>
@@ -236,31 +233,24 @@ export default function QuestSteps() {
 
   if (visible.length === 0) return null
 
-  const groups = groupByQuest(visible)
+  const groups = groupByZone(visible)
 
   return (
     <div className="steps-container">
       {groups.map((group, gi) => (
-        <div key={gi} className="quest-group">
-          {group.questName && (
-            <div
-              className="quest-group-header"
-              onClick={() => goToStep(group.steps[0].absoluteIndex)}
-              title={`Jump to: ${group.questName}`}
-            >
-              <span className="quest-group-name">{group.questName}</span>
-              {group.requiredTotal > 0 && (
-                <span className="quest-group-progress">
-                  {group.requiredDone}/{group.requiredTotal}
-                </span>
-              )}
-              {group.questType && QUEST_TYPE_LABEL[group.questType] && (
-                <span className={`quest-group-badge quest-group-badge--${group.questType}`}>
-                  {QUEST_TYPE_LABEL[group.questType]}
-                </span>
-              )}
-            </div>
-          )}
+        <div key={gi} className="zone-step-group">
+          <div
+            className="zone-step-header"
+            onClick={() => goToStep(group.steps[0].absoluteIndex)}
+            title={`Jump to first step in ${group.zone}`}
+          >
+            <span className="zone-step-name">{group.zone}</span>
+            {group.requiredTotal > 0 && (
+              <span className="zone-step-progress">
+                {group.requiredDone}/{group.requiredTotal}
+              </span>
+            )}
+          </div>
           {group.steps.map(({ step, isCurrent, isCompleted, absoluteIndex, orderLabel }) => (
             <StepItem
               key={step.id}
@@ -269,6 +259,8 @@ export default function QuestSteps() {
               isCompleted={isCompleted}
               absoluteIndex={absoluteIndex}
               orderLabel={orderLabel}
+              questTag={step.questName}
+              questType={step.questType}
             />
           ))}
         </div>
@@ -276,3 +268,4 @@ export default function QuestSteps() {
     </div>
   )
 }
+

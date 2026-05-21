@@ -1360,6 +1360,68 @@ html, body {
 }
 
 /* ── Quest Group Headers ─────────────────────────────────────────────────── */
+/* ── Zone-grouped step header (current tracker view) ───────────────── */
+.zone-step-group {
+  /* container for zone header + its sequential steps */
+}
+.zone-step-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px 4px 12px;
+  margin-top: 4px;
+  background: rgba(58, 144, 144, 0.06);
+  border-top: 1px solid rgba(58, 144, 144, 0.20);
+  border-left: 3px solid rgba(58, 144, 144, 0.55);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.zone-step-header:hover { background: rgba(58, 144, 144, 0.12); }
+.zone-step-header:first-child { margin-top: 0; }
+.zone-step-name {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: rgba(160, 220, 190, 1);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+.zone-step-progress {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1px 5px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Per-step quest tag (shows which quest this step belongs to) */
+.step-quest-tag {
+  font-family: var(--font-display);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  display: inline-block;
+  align-self: flex-start;
+}
+.step-quest-tag--main       { color: var(--gold);   background: rgba(200,170,110,0.10); border: 1px solid rgba(200,170,110,0.20); }
+.step-quest-tag--side       { color: var(--blue);   background: rgba(80,128,176,0.10);  border: 1px solid rgba(80,128,176,0.20); }
+.step-quest-tag--ascendancy { color: var(--orange); background: rgba(208,128,48,0.10);  border: 1px solid rgba(208,128,48,0.20); }
+.step-quest-tag--trial      { color: var(--orange); background: rgba(208,128,48,0.10);  border: 1px solid rgba(208,128,48,0.20); }
+
 .quest-group-header {
   display: flex;
   align-items: center;
