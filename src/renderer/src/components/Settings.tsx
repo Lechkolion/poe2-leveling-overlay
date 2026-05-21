@@ -33,7 +33,10 @@ function keyEventToAccelerator(e: KeyboardEvent): string | null {
 }
 
 export default function Settings() {
-  const { logPath, logError, quickAdvanceKey, setLogPath, setQuickAdvanceKey, resetProgress } = useGameStore()
+  const {
+    logPath, logError, quickAdvanceKey, setLogPath, setQuickAdvanceKey, resetProgress,
+    currentZoneName, currentCharacter, characterLevel,
+  } = useGameStore()
   const [customPath, setCustomPath] = useState(logPath ?? '')
   const [confirmReset, setConfirmReset] = useState(false)
   const [capturing, setCapturing] = useState(false)
@@ -158,6 +161,39 @@ export default function Settings() {
           <div><kbd>Ctrl+Shift+B</kbd> Previous step</div>
           {quickAdvanceKey && <div><kbd>{quickAdvanceKey}</kbd> Next step (quick key)</div>}
           <div><kbd>Click step</kbd> Jump to step</div>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <div className="settings-title">Diagnostics</div>
+        <div className="settings-hint">Live state from the log watcher — use this to verify detection is working.</div>
+        <div className="diag-grid">
+          <span className="diag-label">Log path:</span>
+          <span className={`diag-value ${logPath ? 'diag-value--ok' : 'diag-value--bad'}`}>
+            {logPath || '(none found)'}
+          </span>
+          <span className="diag-label">Log error:</span>
+          <span className={`diag-value ${logError ? 'diag-value--bad' : 'diag-value--ok'}`}>
+            {logError || '(none)'}
+          </span>
+          <span className="diag-label">Character:</span>
+          <span className={`diag-value ${currentCharacter ? 'diag-value--ok' : 'diag-value--bad'}`}>
+            {currentCharacter || '(not detected yet)'}
+          </span>
+          <span className="diag-label">Level:</span>
+          <span className={`diag-value ${characterLevel > 0 ? 'diag-value--ok' : 'diag-value--bad'}`}>
+            {characterLevel > 0 ? characterLevel : '(not detected yet)'}
+          </span>
+          <span className="diag-label">Current zone:</span>
+          <span className={`diag-value ${currentZoneName ? 'diag-value--ok' : 'diag-value--bad'}`}>
+            {currentZoneName || '(not detected yet)'}
+          </span>
+        </div>
+        <div className="settings-hint">
+          If zone/character show "(not detected yet)", the log file isn't being read.
+          Make sure POE2 is running and has logged events since the overlay started — try entering a new zone
+          or leveling up to trigger a log write. If the path above shows "(none found)", paste the correct path in
+          "Client.txt Log Path" above.
         </div>
       </div>
 
