@@ -1459,6 +1459,94 @@ html, body {
   background: var(--border-dim);
 }
 
+/* ── Zone sub-grouping inside each Act ──────────────────────────── */
+.qb-zone-block {
+  /* container for zone header + its quests */
+}
+
+.qb-zone-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 4px 10px 4px 8px;
+  margin-top: 2px;
+  background: rgba(58, 144, 144, 0.04);
+  border: none;
+  border-left: 2px solid rgba(58, 144, 144, 0.35);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgba(126, 200, 168, 0.85);
+  text-transform: none;
+  transition: background 0.1s;
+}
+.qb-zone-header:hover {
+  background: rgba(58, 144, 144, 0.10);
+}
+.qb-zone-header--here {
+  background: rgba(58, 144, 144, 0.14);
+  border-left-color: rgba(58, 144, 144, 0.75);
+  color: rgba(160, 220, 190, 1);
+}
+
+.qb-zone-chevron {
+  font-size: 9px;
+  color: var(--text-faint);
+  width: 10px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.qb-zone-name {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qb-zone-here-badge {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 1px 4px;
+  background: rgba(58, 144, 144, 0.18);
+  border: 1px solid rgba(58, 144, 144, 0.45);
+  border-radius: 2px;
+  color: rgba(160, 220, 190, 1);
+}
+
+.qb-zone-count {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Indent quests under their zone header */
+.quest-browser-item--zoned {
+  padding-left: 22px;
+}
+
+/* "Also visits" zone breadcrumb under quest name */
+.qb-quest-zones {
+  font-size: 9px;
+  color: var(--text-faint);
+  margin-top: 1px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .quest-browser-item {
   display: flex;
   align-items: flex-start;
