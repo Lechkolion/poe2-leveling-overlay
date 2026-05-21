@@ -3,6 +3,7 @@ import {
   GiWalkingBoot, GiCrossedSwords, GiClick, GiTalk, GiOpenChest,
   GiObelisk, GiTrophy, GiMagicPortal, GiInfo,
   GiSparkles, GiCrown, GiCrystalShine, GiBackForth, GiCheckMark,
+  GiSkullCrossedBones, GiPositionMarker,
 } from 'react-icons/gi'
 import type { IconType } from 'react-icons'
 import { useGameStore, getVisibleSteps, ZONE_MAP } from '../store/gameStore'
@@ -26,10 +27,51 @@ const SKIP = new Set([
   'Waypoint','When','With','Your',
 ])
 
+// Build a zone-alias set that includes the canonical name + variants
+// without leading articles. So "The Riverbank" → also matches "Riverbank".
+const ZONE_ALIAS_SET: Set<string> = (() => {
+  const s = new Set<string>()
+  for (const z of ZONE_MAP.keys()) {
+    s.add(z)
+    const stripped = z.replace(/^(The|A|An)\s+/i, '')
+    if (stripped !== z) s.add(stripped)
+    // Also short names: "Ogham Village" → "Village" not desirable (too generic).
+    // Skip single-word aliases unless the original is 2+ words and the suffix is unique.
+  }
+  // Common short aliases used colloquially in instructions
+  const aliases: Record<string, string> = {
+    'Encampment':   'Clearfell Encampment',
+    'Caravan':      'The Ardura Caravan',
+    'Sanctum':      "Jiquani's Sanctum",
+    'Machinarium':  "Jiquani's Machinarium",
+    'Manor':        'Ogham Manor',
+    'Cemetery':     'Cemetery of the Eternals',
+    'Tomb':         'Tomb of the Consort',
+    'Mausoleum':    'The Mausoleum of the Praetor',
+    'Wetlands':     'Chimeral Wetlands',
+    'Barrens':      'Infested Barrens',
+    'Waterways':    'The Matlan Waterways',
+    'Bog':          'The Azak Bog',
+    'Apex':         'Apex of Filth',
+    'Kopec':        'Temple of Kopec',
+    'Chambers':     'The Black Chambers',
+    'Crypts':       'The Venom Crypts',
+    'Grotto':       'The Titan Grotto',
+    'Badlands':     'Mastodon Badlands',
+    'Valley':       'Valley of the Titans',
+    'Vault':        'The Molten Vault',
+    'Quarry':       'Mawdun Quarry',
+    'Mine':         'Mawdun Mine',
+    'Halls':        'Halls of the Dead',
+  }
+  for (const k of Object.keys(aliases)) s.add(k)
+  return s
+})()
+
 // Classify a proper noun → CSS class. Priority: boss > zone > npc > generic.
 function classifyNoun(word: string): string {
   if (BOSS_NAMES.has(word)) return 'noun-boss'
-  if (ZONE_MAP.has(word)) return 'noun-zone'
+  if (ZONE_ALIAS_SET.has(word)) return 'noun-zone'
   if (NPC_NAMES.has(word)) return 'noun-npc'
   return 'noun-hl'
 }
@@ -54,7 +96,18 @@ function hl(text: string): React.ReactNode {
     const start = m.index + offset
     if (start > last) parts.push(text.slice(last, start))
     const cls = classifyNoun(word)
-    parts.push(<span key={start} className={cls}>{word}</span>)
+    // Inline icon prefix: skull for bosses, pin for zones
+    let prefix: React.ReactNode = null
+    if (cls === 'noun-boss') {
+      prefix = <GiSkullCrossedBones className="noun-icon noun-icon--boss" size={12} />
+    } else if (cls === 'noun-zone') {
+      prefix = <GiPositionMarker className="noun-icon noun-icon--zone" size={11} />
+    }
+    parts.push(
+      <span key={start} className={cls}>
+        {prefix}{word}
+      </span>
+    )
     last = start + word.length
   }
   if (last < text.length) parts.push(text.slice(last))

@@ -432,9 +432,19 @@ html, body {
 /* Proper-noun highlighting in step instructions.
    Classification: boss > zone > npc > generic (fallback) */
 .noun-hl   { color: #a8d4f0; font-style: normal; }           /* generic / fallback */
-.noun-boss { color: #e07060; font-weight: 600; }              /* bosses — red, bold */
+.noun-boss { color: #ff7050; font-weight: 700; }              /* bosses — red, bold */
 .noun-zone { color: #7ec8a8; font-style: italic; }            /* zones — teal, italic */
 .noun-npc  { color: #e8cc88; font-weight: 500; }              /* NPCs — gold, semi-bold */
+
+/* Inline icon prefix inside highlighted noun spans */
+.noun-icon {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 3px;
+  opacity: 0.85;
+}
+.noun-icon--boss { color: #ff7050; }
+.noun-icon--zone { color: #7ec8a8; }
 
 /* Subtle dim variants when step is completed (line-through context) */
 .step--done .noun-boss,
@@ -1499,10 +1509,32 @@ html, body {
 }
 
 .quest-browser-act {
-  padding: 5px 10px 3px 10px;
+  padding: 8px 10px 5px 10px;
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-align: left;
+}
+.quest-browser-act:hover { background: rgba(200, 170, 110, 0.05); }
+.quest-browser-act-chevron {
+  font-size: 10px;
+  color: var(--gold-dim);
+  width: 10px;
+}
+.quest-browser-act-count {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--gold-dim);
+  background: rgba(200, 170, 110, 0.10);
+  border: 1px solid rgba(200, 170, 110, 0.20);
+  border-radius: 2px;
+  padding: 1px 5px;
+  font-variant-numeric: tabular-nums;
 }
 
 .quest-browser-act-label {

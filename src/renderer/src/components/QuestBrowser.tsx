@@ -75,7 +75,7 @@ export default function QuestBrowser() {
   const currentQuestName = ALL_STEPS[currentStepIndex]?.questName
   const currentZone = ALL_STEPS[currentStepIndex]?.zone
 
-  // Collapsed zone state — click zone header to toggle
+  // Collapsed state — both zone and act headers are click-to-toggle
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
   const toggleZone = (act: number, zone: string) => {
     const k = `${act}::${zone}`
@@ -85,7 +85,16 @@ export default function QuestBrowser() {
       return next
     })
   }
+  const toggleAct = (act: number) => {
+    const k = `act::${act}`
+    setCollapsed(prev => {
+      const next = new Set(prev)
+      if (next.has(k)) next.delete(k); else next.add(k)
+      return next
+    })
+  }
   const isCollapsed = (act: number, zone: string) => collapsed.has(`${act}::${zone}`)
+  const isActCollapsed = (act: number) => collapsed.has(`act::${act}`)
 
   const questsByAct = new Map<number, QuestEntry[]>()
   ALL_QUESTS.forEach(q => {
@@ -106,14 +115,21 @@ export default function QuestBrowser() {
         const actLabel = act.id <= 4 ? `ACT ${act.id}` : `INTERLUDE ${act.id - 4}`
         const zoneGroups = groupByZoneInAct(quests)
 
+        const actCollapsed = isActCollapsed(act.id)
         return (
           <div key={act.id}>
-            <div className="quest-browser-act">
+            <button
+              className={`quest-browser-act ${actCollapsed ? 'quest-browser-act--collapsed' : ''}`}
+              onClick={() => toggleAct(act.id)}
+              title={actCollapsed ? `Expand ${actLabel}` : `Collapse ${actLabel}`}
+            >
+              <span className="quest-browser-act-chevron">{actCollapsed ? '▸' : '▾'}</span>
               <span className="quest-browser-act-label">{actLabel}</span>
               <div className="quest-browser-act-rule" />
-            </div>
+              <span className="quest-browser-act-count">{quests.length}</span>
+            </button>
 
-            {zoneGroups.map(group => {
+            {!actCollapsed && zoneGroups.map(group => {
               const collapsedHere = isCollapsed(act.id, group.zone)
               const isHereNow = group.zone === currentZone
               return (
