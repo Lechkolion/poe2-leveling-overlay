@@ -221,6 +221,19 @@ export const ACT4_STEPS: GuideStep[] = [
     }
   },
   {
+    id: 'a4-09c',
+    zone: 'Solitary Confinement',
+    actId: 4,
+    type: 'kill',
+    instruction: 'OPTIONAL: Find and kill Bronnach, the Manhunter in Solitary Confinement — guaranteed unique item drop + some rare loot.',
+    questName: 'Bronnach, the Manhunter',
+    questType: 'side',
+    optional: true,
+    reward: { type: 'stat_bonus', description: 'Guaranteed unique item drop + rare loot (specific uniques UNCONFIRMED)' },
+    detail: 'Optional boss elsewhere in Solitary Confinement (away from the main Prisoner fight). Drops a guaranteed unique item.',
+    speedrunNote: 'DO IT — guaranteed unique is rare value for any character.',
+  },
+  {
     id: 'a4-10',
     zone: 'Solitary Confinement',
     actId: 4,

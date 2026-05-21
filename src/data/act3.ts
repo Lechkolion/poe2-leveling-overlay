@@ -114,7 +114,7 @@ export const ACT3_STEPS: GuideStep[] = [
     questType: 'side',
     isQuestStart: true,
     detail: 'Find the corpse holding the venom phial in the Venom Crypts, then portal back to town. Turn in the phial to Servi. CRITICAL WARNING: The reward you choose here is PERMANENT AND CANNOT BE CHANGED LATER. Choose carefully.',
-    reward: { type: 'stat_bonus', description: 'PERMANENT choice (CANNOT be changed): varies by what Servi offers' },
+    reward: { type: 'stat_bonus', description: 'PERMANENT choice of 3 Venom Draughts from Servi (e.g., +Stun Threshold / +Ailment Resist / +Mana) — CANNOT be changed later' },
     speedrunNote: 'DO IT — permanent bonus. CANNOT be undone. Pick carefully before confirming.',
     miniMap: {
       layoutType: 'dungeon',
@@ -416,7 +416,7 @@ export const ACT3_STEPS: GuideStep[] = [
     questName: 'The Sacrificial Heart',
     questType: 'side',
     detail: 'Sacrificial Heart is an RNG drop from Vaal Goliaths (the large Vaal elite enemies). Keep killing them until it drops. Then place it on the altar in Aggorat.',
-    reward: { type: 'stat_bonus', description: 'Sacrificial Heart drop → place on Aggorat altar for +2 SP' },
+    reward: { type: 'stat_bonus', description: 'Sacrificial Heart quest item drop (used later at Aggorat altar — actual +2 SP awarded there)' },
     speedrunNote: 'MUST DO if drop happens fast. Average ~5-15 Vaal Goliath kills. If taking too long: do it after Act 3, come back.',
     miniMap: {
       layoutType: 'open',

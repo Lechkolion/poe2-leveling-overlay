@@ -313,8 +313,21 @@ export const ACT2_STEPS: GuideStep[] = [
       layoutType: 'dungeon',
       objectiveHint: 'Descend through the buried structure to reach Heart of Keth',
       exitHint: 'Heart of Keth is at the deepest level',
-      tips: ['Pick up the Sun Relic drop here', 'Sun Relic + Mastodon Tusks = Ancient Vows turn-in later']
+      tips: ['Optional Elemental Offering event here — gives a permanent +30% resistance ring']
     }
+  },
+  {
+    id: 'a2-15a3',
+    zone: 'Buried Shrines',
+    actId: 2,
+    type: 'interact',
+    instruction: 'OPTIONAL: Find the Elemental Offering event in Buried Shrines. Choose Fire / Water / Lightning offering → permanent magic ring with +30% to chosen resistance.',
+    questName: 'Elemental Offering',
+    questType: 'side',
+    optional: true,
+    reward: { type: 'stat_bonus', description: 'Magic ring with +30% chosen elemental resistance (Fire / Water / Lightning) — PERMANENT, one-time' },
+    speedrunNote: 'DO IT — free permanent +30% resistance ring. Ruby (Fire) is often suggested for the upcoming boss fights.',
+    detail: 'Side event inside Buried Shrines. Interact with the offering shrine to choose one of three elements. Drops a magic ring with +30% to that resistance.',
   },
   {
     id: 'a2-15a2',
@@ -390,8 +403,7 @@ export const ACT2_STEPS: GuideStep[] = [
     questName: 'A Crown of Stone',
     questType: 'main',
     isQuestStart: true,
-    reward: { type: 'stat_bonus', description: 'One of two permanent buffs (choice at medallion — can be changed later)' },
-    detail: 'The waypoint is in this zone. After clicking all 3 seals, find the medallion and place both relics in it to choose one of two permanent buffs. This choice CAN be changed later.',
+    detail: 'The waypoint is in this zone. After clicking all 3 seals, the medallion unlocks. The actual buff is picked at the medallion via the Ancient Vows side quest (a2-16) — placing both clan relics gets the +30% Charm Charges OR +15% Mana Recovery choice.',
     miniMap: {
       layoutType: 'open',
       objectiveHint: '3 seals spread across Valley corners; medallion is near the waypoint',

@@ -576,8 +576,7 @@ export const ACT1_STEPS: GuideStep[] = [
     questName: 'The Mad Wolf of Ogham',
     questType: 'main',
     isQuestComplete: true,
-    detail: 'Count Geonor is a werewolf/beast form noble. Phase 1: semi-human, slower. Phase 2 (~70%): transforms into full beast, very fast, high damage. Phase 3 (~30%): berserk mode, arena fills with corrupted ground.',
-    reward: { type: 'stat_bonus', description: 'Unlocks Act 2. Possible rare loot.' },
+    detail: 'Count Geonor is a werewolf/beast form noble. Phase 1: semi-human, slower. Phase 2 (~70%): transforms into full beast, very fast, high damage. Phase 3 (~30%): berserk mode, arena fills with corrupted ground. After kill → Act 2 portal appears.',
     miniMap: {
       layoutType: 'dungeon',
       objectiveHint: 'Boss room on Floor 3 — deepest level of the manor',
