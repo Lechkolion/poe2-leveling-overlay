@@ -495,7 +495,7 @@ export const ACT2_STEPS: GuideStep[] = [
     zone: 'The Spires of Deshar',
     actId: 2,
     type: 'interact',
-    instruction: 'MUST DO: Find the Shrine of Garukhan — interact for +10% Lightning Resistance (PERMANENT). REPEATABLE on Cruel Act 2 for +20% TOTAL Lightning Resistance.',
+    instruction: 'MUST DO: Find the Shrine of Garukhan in the CENTER of Spires of Deshar (large open arena with glowing sisters between stone spires). Interact for +10% Lightning Resistance (PERMANENT). REPEATABLE on Cruel Act 2 for +20% TOTAL.',
     questName: 'Sisters of Garukhan',
     questType: 'side',
     detail: 'Interact with the Shrine of Garukhan (chakram automatons wake up and attack — kill them, but the buff is granted ON INTERACT, not on kill). Repeatable on Cruel Act 2 — activate it twice across difficulties for +20% Lightning Resist total.',
