@@ -4,6 +4,16 @@ import type { GuideStep, ZoneEntry } from './types'
 // Hub: Ziggurat Encampment (NPCs: Alva Valai, Servi, Oswald)
 // Act Boss: Doryani, Royal Thaumaturge (The Black Chambers)
 // CRITICAL: Kill Xyclucian in Chimeral Wetlands → drops Trial of Chaos key (Ascendancy)
+//
+// TODO(0.5): GGG patch notes state "Area order in Act 3 has been somewhat rearranged
+// in order to make progression smoother" but give no specifics. Patch ships 2026-05-29.
+// After launch, verify zone sequence against in-game order — especially:
+//   Sandswept Marsh → Jungle Ruins → (Venom Crypts side / Infested Barrens main) →
+//   Chimeral Wetlands → Jiquani's Machinarium → Jiquani's Sanctum → Matlan Waterways →
+//   Drowned City → Apex of Filth → Temple of Kopec → Utzaal → Aggorat → Black Chambers
+// Cross-check with maxroll.gg/poe2 or fextralife once they update post-launch.
+// Already confirmed: Matlan Waterways entrance moved to Jungle Ruins, Azak Bog moved
+// into Matlan Waterways, Venom Crypts shortcut added.
 
 export const ACT3_ZONES: ZoneEntry[] = [
   { logName: 'Sandswept Marsh',          actId: 3 },
@@ -42,7 +52,10 @@ export const ACT3_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Encampment is northeast of the marsh entry',
       exitHint: 'Stone ziggurats visible above the tree line — head toward them',
-      tips: ['Rootdredge optional boss here — skip (gem reward only)']
+      visualCues: [
+        { icon: '🏕️', cue: 'Explorer camp (tents + merchant NPC)', leadsTo: 'Talk to explorer → next-area direction + minimap reveal' },
+      ],
+      tips: ['Rootdredge optional boss here — skip (gem reward only)', '0.5: jungle explorer camps now point to the next area when you talk to them']
     }
   },
   {
@@ -99,7 +112,11 @@ export const ACT3_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Two exits to find: Venom Crypts (near waypoint) + Infested Barrens',
       exitHint: 'After scouting both: go to Venom Crypts first (side quest before main)',
-      tips: ['Enter Venom Crypts via Jungle Ruins exit', 'Tag the Infested Barrens waypoint by entering briefly, then portal out']
+      visualCues: [
+        { icon: '🏕️', cue: 'Explorer camp — TALK to explorer', leadsTo: 'Points to next area + reveals destination on minimap' },
+        { icon: '🚪', cue: '0.5: Matlan Waterways entrance is HERE now', leadsTo: 'Moved from Infested Barrens → Jungle Ruins' },
+      ],
+      tips: ['Enter Venom Crypts via Jungle Ruins exit', 'Tag the Infested Barrens waypoint by entering briefly, then portal out', '0.5: Matlan Waterways entrance relocated to Jungle Ruins — shorter route']
     }
   },
 
@@ -120,7 +137,10 @@ export const ACT3_STEPS: GuideStep[] = [
       layoutType: 'dungeon',
       objectiveHint: 'Venom phial corpse is near the end of the crypt',
       exitHint: 'After looting: portal back to town and turn in at Servi',
-      tips: ['Poison-themed zone — bring life flasks', 'PERMANENT CHOICE at Servi — cannot be changed later']
+      visualCues: [
+        { icon: '🌿', cue: '0.5: Alternate escape route added', leadsTo: 'Shortcut OUT through the jungle (skip retreading the crypt)' },
+      ],
+      tips: ['Poison-themed zone — bring life flasks', 'PERMANENT CHOICE at Servi — cannot be changed later', '0.5: after looting phial, look for jungle-exit shortcut instead of backtracking']
     }
   },
 
@@ -137,9 +157,14 @@ export const ACT3_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Altar is in the center of the Barrens',
       exitHint: 'Large stone structure with glowing runes',
+      visualCues: [
+        { icon: '🏕️', cue: 'Explorer camp — TALK to explorer', leadsTo: 'Points to next area + reveals it on minimap' },
+      ],
       tips: [
         'Bug enemies swarm here — keep moving to altar, avoid getting surrounded',
-        'Exits at the perimeter: Chimeral Wetlands, Azak Bog, Matlan Waterways — tag waypoints in each before continuing',
+        'Exits at the perimeter: Chimeral Wetlands — tag waypoint before continuing',
+        '0.5: Matlan Waterways entrance is NO LONGER here — moved to Jungle Ruins',
+        '0.5: Azak Bog is NO LONGER here — moved INSIDE Matlan Waterways (no more searching the sparse jungle)',
       ]
     }
   },
@@ -310,15 +335,23 @@ export const ACT3_STEPS: GuideStep[] = [
     id: 'a3-16',
     zone: 'The Matlan Waterways',
     actId: 3,
-    type: 'interact',
-    instruction: 'Activate every lever to navigate the Waterways, then the BIG lever at the end (Legacy of the Vaal).',
+    type: 'move',
+    instruction: '0.5: Walk over each pressure pad to navigate the Waterways (no levers anymore). Final section is pre-drained — head straight to the Drowned City entrance.',
     questName: 'Legacy of the Vaal',
     questType: 'main',
     miniMap: {
       layoutType: 'branching',
-      objectiveHint: 'Multiple levers throughout — the big final lever is at the end',
-      exitHint: 'After the big lever: water drains, access to Drowned City opens',
-      tips: ['Activate every lever you encounter — they gate progression', 'Big final lever opens Drowned City entrance']
+      objectiveHint: 'Pressure pads gate progression — just walk over each one',
+      exitHint: 'Final section is pre-drained — Drowned City entrance is straight through',
+      visualCues: [
+        { icon: '👣', cue: '0.5: Pressure pads on the floor (replaces levers)', leadsTo: 'Walk over to open the next gate' },
+        { icon: '🐊', cue: '0.5: Azak Bog entrance is now INSIDE Waterways', leadsTo: 'Side-area entrance moved here from Infested Barrens' },
+      ],
+      tips: [
+        '0.5: levers replaced by pressure pads — walk over to activate',
+        '0.5: final water section is pre-drained — no big lever needed',
+        'Azak Bog entrance is inside the Waterways now (also new in 0.5)',
+      ]
     }
   },
   {

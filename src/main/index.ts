@@ -9,22 +9,22 @@ let logWatcher: LogWatcher | null = null
 let questOCR: QuestOCR | null = null
 let quickKeyAccelerator: string | null = null
 
-// Window is permanently wide enough to fit the sidebar panel. The panel
-// area is transparent when sidebar is closed (game/desktop visible through).
-// This avoids the resize-flicker that happens when toggling.
-const TAB_W = 28
-const OVERLAY_W = 300
-const SIDEBAR_W = 400
+// Window starts at a reasonable overlay width. User can drag-resize freely.
+const DEFAULT_W = 320
+const MIN_W = 240
+const MAX_W = 900
 
 function createOverlayWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
 
-  const windowWidth = SIDEBAR_W + TAB_W + OVERLAY_W  // always reserve sidebar space
+  const windowWidth = DEFAULT_W
   const windowHeight = 750
 
   mainWindow = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
+    minWidth: MIN_W,
+    maxWidth: MAX_W,
     x: screenWidth - windowWidth - 10,
     y: Math.floor((screenHeight - windowHeight) / 2),
     frame: false,
@@ -93,15 +93,14 @@ function setupIPC(): void {
     shell.openExternal(url)
   })
 
-  // Renderer reports content height change
+  // Renderer reports content height change — only adjust HEIGHT, leave width
+  // (user-controlled via drag-resize) untouched.
   ipcMain.on('resize-window', (_, height: number) => {
     if (mainWindow) {
       const [w] = mainWindow.getSize()
       mainWindow.setSize(w, Math.min(Math.max(height, 120), 900))
     }
   })
-
-  // Sidebar open/close no longer resizes the window — area is always reserved.
 
   // Renderer requests log path change
   ipcMain.on('set-log-path', async (_, customPath: string) => {

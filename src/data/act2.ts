@@ -2,7 +2,7 @@ import type { GuideStep, ZoneEntry } from './types'
 
 // POE2 Act 2 — The Desert Expanse
 // Hubs: Vastiri Outskirts → The Ardura Caravan
-// Act Boss: Jamanra the Abomination (Dreadnought Vanguard)
+// Act Boss: Jamanra the Abomination (The Dreadnought) — 0.5: Vanguard zone removed, fight now inside The Dreadnought
 // IMPORTANT: Balbala kill in Traitor's Passage unlocks Trial of the Sekhemas
 
 export const ACT2_ZONES: ZoneEntry[] = [
@@ -23,8 +23,7 @@ export const ACT2_ZONES: ZoneEntry[] = [
   { logName: 'The Ardura Caravan',       actId: 2, isHub: true, hasWaypoint: true },
   { logName: 'Path of Mourning',         actId: 2 },
   { logName: 'The Spires of Deshar',     actId: 2 },
-  { logName: 'The Dreadnought',          actId: 2 },
-  { logName: 'Dreadnought Vanguard',     actId: 2 },
+  { logName: 'The Dreadnought',          actId: 2 },  // 0.5: Act 2 boss fight moved here (Vanguard zone removed)
   { logName: 'Trial of the Sekhemas',    actId: 2, hasWaypoint: true },
 ]
 
@@ -132,6 +131,10 @@ export const ACT2_STEPS: GuideStep[] = [
       layoutType: 'dungeon',
       objectiveHint: 'If you find papers on walls, you are close. Stairs going up = right way.',
       exitHint: 'After kill: find the exit to the Halani Gates',
+      visualCues: [
+        { icon: '🍴', cue: 'Guaranteed intersection (0.5)', leadsTo: 'One path = Balbala, one path = exit' },
+        { icon: '📜', cue: 'Maraketh parchment (used to bind Djinns)', leadsTo: 'Points the way to Djinn Balbala' },
+      ],
       tips: ['Balbala has mirror/illusion attacks — hit the real one (different glow)', 'After kill: pick up the Djinn Barya from the ground', 'After Balbala: find the exit stairs to the Halani Gates']
     }
   },
@@ -408,7 +411,11 @@ export const ACT2_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: '3 seals spread across Valley corners; medallion is near the waypoint',
       exitHint: 'After relics placed: find the exit to the Titan Grotto',
-      tips: ['Activate seals first', 'Place both relics in the medallion to unlock buff choice', 'Buff choice CAN be changed later', 'Exit to Titan Grotto is at the far end']
+      visualCues: [
+        { icon: '🗿', cue: 'Giant Titan heads (visible on entry)', leadsTo: 'Behind each = linear canyon to an Ancient Seal' },
+        { icon: '🌀', cue: 'Portal that spawns after activating a seal', leadsTo: 'Returns you to Valley start (Titan heads)' },
+      ],
+      tips: ['Activate seals first', 'Place both relics in the medallion to unlock buff choice', 'Buff choice CAN be changed later', 'Exit to Titan Grotto is at the far end', '0.5: enter valley → see Titan heads → each is one canyon → end of canyon = seal → portal back to start']
     }
   },
   {
@@ -562,22 +569,22 @@ export const ACT2_STEPS: GuideStep[] = [
     zone: 'The Dreadnought',
     actId: 2,
     type: 'move',
-    instruction: 'Navigate through The Dreadnought to reach Dreadnought Vanguard.',
+    instruction: "Navigate through The Dreadnought toward Jamanra's throne arena at the forward/top section.",
     miniMap: {
       layoutType: 'dungeon',
-      objectiveHint: 'Vanguard area is at the top/forward section of the Dreadnought',
-      exitHint: 'Massive door into the Vanguard area',
-      tips: ['Linear — keep pushing forward']
+      objectiveHint: 'Jamanra arena is at the top/forward section of the Dreadnought',
+      exitHint: 'Massive door / open arena at the forward end',
+      tips: ['Linear — keep pushing forward', '0.5: separate Vanguard zone removed — boss is inside The Dreadnought now']
     }
   },
 
-  // ─── DREADNOUGHT VANGUARD (Act 2 Boss) ───────────────────────────────────
+  // ─── JAMANRA (Act 2 Boss — 0.5: now inside The Dreadnought) ──────────────
   {
     id: 'a2-27',
-    zone: 'Dreadnought Vanguard',
+    zone: 'The Dreadnought',
     actId: 2,
     type: 'kill',
-    instruction: 'Enter Dreadnought Vanguard (forward section of The Dreadnought). Kill Jamanra the Abomination — Act 2 Final Boss.',
+    instruction: 'Reach the forward arena of The Dreadnought. Kill Jamanra the Abomination — Act 2 Final Boss.',
     questName: 'The Trail of Corruption',
     questType: 'main',
     isQuestComplete: true,
@@ -590,14 +597,15 @@ export const ACT2_STEPS: GuideStep[] = [
         'Use pillar obstacles to break line of sight on lightning beams',
         'Adds spawn in Phase 2 — kill priority adds (healers first)',
         'Phase 3: commit all flasks and cooldowns',
-        'Death: waypoint to Ardura Caravan, walk back quickly'
+        'Death: waypoint to Ardura Caravan, walk back quickly',
+        '0.5: no Vanguard zone — fight is right inside The Dreadnought'
       ]
     },
     speedrunNote: 'With Ascendancy + 4 skill points active, this is very manageable. Burst all phases.'
   },
   {
     id: 'a2-28',
-    zone: 'Dreadnought Vanguard',
+    zone: 'The Dreadnought',
     actId: 2,
     type: 'portal',
     instruction: 'Act 2 Complete! Enter the portal to Act 3.',

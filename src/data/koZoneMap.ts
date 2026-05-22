@@ -43,7 +43,6 @@ export const KO_ZONE_MAP: Record<string, string> = {
   '아르두라 대상':      'The Ardura Caravan',
   '데샤르의 첨탑':      'The Spires of Deshar',
   '드레드노트':         'The Dreadnought',
-  '드레드노트 선봉대':  'Dreadnought Vanguard',
 
   // ── Act 3 ──────────────────────────────────────────────────────────────
   '모래 쓸린 늪':       'Sandswept Marsh',

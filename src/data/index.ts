@@ -9,7 +9,7 @@ import {
   INTERLUDE3_STEPS, INTERLUDE3_ZONES
 } from './interludes'
 import { LOGNAME_TO_AREAID } from './areaIds'
-import { EXILE_AREAS_2, EXILE_BASE_URL, parseLevelRange } from './exileLayouts'
+import { EXILE_AREAS_2, parseLevelRange } from './exileLayouts'
 
 export const ACTS: ActData[] = [
   { id: 1, name: 'Act 1 — The Corrupted Lands', startZone: 'The Riverbank' },
@@ -62,27 +62,23 @@ export const REWARD_STEPS = ALL_STEPS.filter(s => s.reward && (
   s.reward.type === 'skill_point' || s.reward.type === 'ascendancy_point'
 ))
 
-// Zone info combining our data + Exile-UI level recommendations + layouts.
+// Zone info — Exile-UI level recommendations (used by ZoneBanner).
 export interface ZoneInfo {
   areaId?: string
   normalLevel?: number
   cruelLevel?: number
-  layouts: string[]      // filenames in Exile-UI act-decoder
-  layoutBaseUrl: string  // prefix to build full URL
 }
 
 export function getZoneInfo(logName: string | null | undefined): ZoneInfo {
-  if (!logName) return { layouts: [], layoutBaseUrl: EXILE_BASE_URL }
+  if (!logName) return {}
   const areaId = LOGNAME_TO_AREAID.get(logName)
-  if (!areaId) return { layouts: [], layoutBaseUrl: EXILE_BASE_URL }
+  if (!areaId) return {}
   const exile = EXILE_AREAS_2[areaId]
   const { normal, cruel } = parseLevelRange(exile?.levelRange)
   return {
     areaId,
     normalLevel: normal,
     cruelLevel: cruel,
-    layouts: exile?.layouts ?? [],
-    layoutBaseUrl: EXILE_BASE_URL,
   }
 }
 

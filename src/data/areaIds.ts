@@ -39,7 +39,6 @@ export const AREA_ID_MAP: Record<string, string> = {
   'g2_10_1': 'Mawdun Quarry',
   'g2_10_2': 'Mawdun Mine',
   'g2_12_1': 'The Dreadnought',
-  'g2_12_2': 'Dreadnought Vanguard',
   'g2_13':   'Trial of the Sekhemas',
   // Act 3
   'g3_1':    'Sandswept Marsh',

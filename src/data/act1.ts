@@ -150,6 +150,11 @@ export const ACT1_STEPS: GuideStep[] = [
       layoutType: 'branching',
       objectiveHint: 'Tree of Souls is in the northeast. Exits to Grim Tangle and Red Vale also in Grelwood.',
       exitHint: 'After speaking to Una: use Red Vale waypoint to get there instantly',
+      visualCues: [
+        { icon: '🌿', cue: 'Glowing magical roots', leadsTo: 'Tree of Souls (Una)' },
+        { icon: '🍄', cue: 'Mushrooms on the ground', leadsTo: 'Grim Tangle entrance' },
+        { icon: '🌊', cue: 'Follow river upstream', leadsTo: 'Red Vale entrance' },
+      ],
       tips: [
         'Grab Grim Tangle waypoint first (enter, tp out, come back)',
         'Grab Red Vale waypoint (enter, tp out, come back)',
@@ -383,6 +388,11 @@ export const ACT1_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Crowbell patrols the northern half',
       exitHint: 'After kill: continue east to Freythorn',
+      visualCues: [
+        { icon: '🪧', cue: 'Signpost in the middle of the path', leadsTo: 'Ogham Farmlands' },
+        { icon: '🐄', cue: 'Pecked-at bovine corpse (farm-to-table trail)', leadsTo: "Crowbell's territory" },
+        { icon: '🦗', cue: 'Locust trail (after Freythorn ritual)', leadsTo: 'Freythorn entrance' },
+      ],
       tips: ['Loud screech = incoming dive bomb — dodge sideways', 'He dies fast — burst damage works well']
     }
   },
@@ -403,7 +413,10 @@ export const ACT1_STEPS: GuideStep[] = [
       layoutType: 'open',
       objectiveHint: 'Find all 4 ritual altars — King spawns only after the 4th ritual',
       exitHint: 'After kill: exit east to Ogham Farmlands',
-      tips: ['Mist deals DoT — fight near the altar edges', 'King spawns immediately after 4th ritual — be ready']
+      visualCues: [
+        { icon: '🦗', cue: 'Trail of locusts after each ritual', leadsTo: 'Next closest ritual altar' },
+      ],
+      tips: ['Mist deals DoT — fight near the altar edges', 'King spawns immediately after 4th ritual — be ready', '0.5: each ritual spawns locusts toward the next closest one — just follow them', '0.5: same locust-trail system now applies to endgame Ritual encounters too (with an added perk)']
     }
   },
   {

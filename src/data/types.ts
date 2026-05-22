@@ -17,11 +17,18 @@ export interface Reward {
   description: string
 }
 
+export interface VisualCue {
+  icon: string                 // Emoji shown inline (e.g. '🍄', '🌿', '🦗')
+  cue: string                  // What you see in-game (e.g. 'Glowing roots')
+  leadsTo: string              // Where it points (e.g. 'Tree of Souls')
+}
+
 export interface MiniMapHint {
   layoutType: 'linear' | 'open' | 'branching' | 'maze' | 'spiral' | 'dungeon'
   objectiveHint: string        // "Boss is always in the NE quadrant"
   exitHint: string             // "Exit: follow the river north"
   tips?: string[]              // Quick tips for speedrunning this zone
+  visualCues?: VisualCue[]     // 0.5 patch environmental navigation cues
 }
 
 export interface GuideStep {

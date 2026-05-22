@@ -8,8 +8,6 @@ import RewardAlert from './components/RewardAlert'
 import MiniMapHint from './components/MiniMapHint'
 import Settings from './components/Settings'
 import HotkeyBar from './components/HotkeyBar'
-import LayoutModal from './components/LayoutModal'
-import LayoutSidebar from './components/LayoutSidebar'
 
 export default function App() {
   const {
@@ -76,30 +74,26 @@ export default function App() {
   }, [advanceStep, navigateToQuest])
 
   return (
-    <div className="app-frame">
-      <LayoutSidebar />
-      <div
-        ref={containerRef}
-        className="overlay"
-      >
-        <Header />
-        <ZoneBanner />
-        <div className="overlay-content">
-          {showSettings ? (
-            <Settings />
-          ) : showQuestBrowser ? (
-            <QuestBrowser />
-          ) : (
-            <>
-              <QuestSteps />
-              <RewardAlert />
-              <MiniMapHint />
-            </>
-          )}
-        </div>
-        <HotkeyBar />
+    <div
+      ref={containerRef}
+      className="overlay"
+    >
+      <Header />
+      <ZoneBanner />
+      <div className="overlay-content">
+        {showSettings ? (
+          <Settings />
+        ) : showQuestBrowser ? (
+          <QuestBrowser />
+        ) : (
+          <>
+            <QuestSteps />
+            <RewardAlert />
+            <MiniMapHint />
+          </>
+        )}
       </div>
-      <LayoutModal />
+      <HotkeyBar />
     </div>
   )
 }

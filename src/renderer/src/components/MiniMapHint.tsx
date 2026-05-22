@@ -1,6 +1,6 @@
 import {
   GiPathDistance, GiAncientRuins, GiPathTile, GiCobweb, GiSpiralShell, GiTombstone,
-  GiExpand, GiContract, GiBullseye, GiExitDoor,
+  GiExpand, GiContract, GiBullseye, GiExitDoor, GiEyeTarget,
 } from 'react-icons/gi'
 import type { IconType } from 'react-icons'
 import { useGameStore, ALL_STEPS, ZONE_STEP_MAP } from '../store/gameStore'
@@ -69,6 +69,25 @@ export default function MiniMapHint() {
             <span className="minimap-label">Exit</span>
             <span className="minimap-value">{hint.exitHint}</span>
           </div>
+          {hint.visualCues && hint.visualCues.length > 0 && (
+            <div className="minimap-cues">
+              <div className="minimap-cues-header">
+                <GiEyeTarget className="minimap-cues-icon" size={12} />
+                <span className="minimap-cues-title">VISUAL CUES</span>
+                <span className="minimap-cues-badge">0.5</span>
+              </div>
+              {hint.visualCues.map((c, i) => (
+                <div key={i} className="minimap-cue">
+                  <span className="minimap-cue-icon">{c.icon}</span>
+                  <span className="minimap-cue-text">
+                    <span className="minimap-cue-what">{c.cue}</span>
+                    <span className="minimap-cue-arrow">→</span>
+                    <span className="minimap-cue-dest">{c.leadsTo}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
           {hint.tips && hint.tips.length > 0 && (
             <div className="minimap-tips">
               {hint.tips.map((tip, i) => (
